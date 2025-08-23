@@ -1,4 +1,4 @@
-import * as THREE from 'three';
+import * as THREE from 'three'
 
 function makeCanvasTexture(drawFunc, repeat = 1) {
     const canvas = document.createElement('canvas');
@@ -31,6 +31,6 @@ export const textures = {
         ctx.fillRect(0, 0, 256, 256);
         ctx.fillStyle = '#000088';
         ctx.fillRect(10, 10, 236, 236);
-    }),
+    }, 10),
 
 }

@@ -69,7 +69,7 @@ export function initMouse(scene, camera, clickFunction) {
         if (!dragNow) return;
         var xd = cx - dragStartX;
         var yd = cy - dragStartY;
-        scene.rotation.x = inRange(-.3, .3, dragStartRX + (yd / window.innerHeight) * 3.14);
+        scene.rotation.x = inRange(-.1, .3, dragStartRX + (yd / window.innerHeight) * 3.14);
         scene.rotation.y = dragStartRY + (xd / window.innerWidth) * 3.14;
     }
 
@@ -78,7 +78,7 @@ export function initMouse(scene, camera, clickFunction) {
         raycaster.setFromCamera({ x: sx / window.innerWidth * 2 - 1, y: -sy / window.innerHeight * 2 + 1 }, camera);
         var results = raycaster.intersectObject(scene, true);
         if (results.length > 0) { //seems we hit comeone
-            var hitEl = results[0].object.parent;
+            var hitEl = results[0].object;
             clickFunction(hitEl);
         }
     }

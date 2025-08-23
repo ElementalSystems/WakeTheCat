@@ -1,7 +1,7 @@
 import * as THREE from 'three';
 import { textures } from './textures.js';
 import { initMouse } from './mouse.js';
-import { makeBasket } from './objects.js';
+import { makeBasket, makeSpindle } from './objects.js';
 
 const scene = new THREE.Scene();
 
@@ -9,7 +9,7 @@ const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
     75, window.innerWidth / window.innerHeight, 0.1, 1000
 );
-camera.position.set(0, 3, 10);
+camera.position.set(0, 15, 30);
 camera.lookAt(0, 0, 0); // Look at the origin
 
 // Renderer
@@ -21,20 +21,22 @@ document.body.appendChild(renderer.domElement);
 
 // Cube
 const cube = makeBasket();
+scene.add(cube);
 cube.position.y = 2;
 cube.position.x = -2;
-cube.castShadow = true; // cube will cast shadow
+cube.rotation.y = 3;
 
-scene.add(cube);
+const cube2 = makeSpindle();
+cube2.position.y = 15;
+cube2.position.x = 10;
+cube2.rotation.x = 3.14 / 2;
 
-const cube2 = makeBasket();
-cube2.position.y = 3.5;
 cube2.castShadow = true; // cube will cast shadow
 
 scene.add(cube2);
 
 // Green Plane
-const planeGeometry = new THREE.PlaneGeometry(100, 100);
+const planeGeometry = new THREE.PlaneGeometry(500, 500);
 const planeMaterial = new THREE.MeshStandardMaterial({
     side: THREE.DoubleSide, map: textures.squares,
 });
@@ -47,16 +49,16 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 0.2); // soft global light
 scene.add(ambientLight);
 
 const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(10, 20, 5);
+directionalLight.position.set(10, 50, 5);
 directionalLight.castShadow = true; // enable shadows
-directionalLight.shadow.mapSize.width = 1024;
-directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.mapSize.width = 2048;
+directionalLight.shadow.mapSize.height = 2048;
 directionalLight.shadow.camera.near = 1;
 directionalLight.shadow.camera.far = 1000;
-directionalLight.shadow.camera.left = -10;
-directionalLight.shadow.camera.right = 10;
-directionalLight.shadow.camera.top = 10;
-directionalLight.shadow.camera.bottom = -10;
+directionalLight.shadow.camera.left = -100;
+directionalLight.shadow.camera.right = 100;
+directionalLight.shadow.camera.top = 100;
+directionalLight.shadow.camera.bottom = -100;
 scene.add(directionalLight);
 
 initMouse(scene, camera, (el) => {
