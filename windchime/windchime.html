@@ -56,7 +56,7 @@
         // B  = 11
         // Chime sound generator
         function playGong(STC, oct, dur = 10, v = 1) {
-            const baseFreq = 440 * Math.pow(2, ((oct + 1) * 12 + STC - 69) / 12);;
+            const baseFreq = 440 * Math.pow(2, (oct * 12 + STC - 57) / 12);
             const now = audioCtx.currentTime;
 
             const master = audioCtx.createGain();
@@ -76,7 +76,6 @@
         // Helper: tone with exponential decay
         function makeTone(freq, destination, startTime, duration) {
             const osc = audioCtx.createOscillator();
-            osc.type = "sine";
             osc.frequency.setValueAtTime(freq, startTime);
 
             const gain = audioCtx.createGain();
