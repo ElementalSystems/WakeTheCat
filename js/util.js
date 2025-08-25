@@ -12,7 +12,7 @@ function unsetElementClass(e, cls) {
 }
 
 //a general animation or slow effect utility
-function callEachFrame(time, each, end) {
+export function callEachFrame(time, each, end) {
     var startTime = 0;
     var endTime = 0;
     function func(t) {
@@ -40,11 +40,11 @@ export function inRange(s, e, v) {
     return v;
 }
 
-function siso(r) { return 3 * r * r - 2 * r * r * r; }
-function so(r) { return 2 * r - r * r; }
-function si(r) { return r * r; }
+export function siso(r) { return 3 * r * r - 2 * r * r * r; }
+export function so(r) { return 2 * r - r * r; }
+export function si(r) { return r * r; }
 
-function reRange(st, ed, func) {
+export function reRange(st, ed, func) {
     return function (r) {
         if (r < st) return 0;
         if (r > ed) return 1;
@@ -54,7 +54,7 @@ function reRange(st, ed, func) {
     }
 }
 
-function inter(r, st, end, func) {
+export function inter(r, st, end, func) {
     if (r < 0) r = 0;
     if (r > 1) r = 1;
     if (func) r = func(r);

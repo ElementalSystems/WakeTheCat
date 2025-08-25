@@ -77,10 +77,12 @@ export function initMouse(scene, camera, clickFunction) {
 
         raycaster.setFromCamera({ x: sx / window.innerWidth * 2 - 1, y: -sy / window.innerHeight * 2 + 1 }, camera);
         var results = raycaster.intersectObject(scene, true);
-        if (results.length > 0) { //seems we hit comeone
-            var hitEl = results[0].object;
-            clickFunction(hitEl);
+        var hitEl = results[0]?.object;
+        while (hitEl) {
+            if (hitEl.name && (!hitEl?.bubbleDown)) break; //we found something with a name that isn't marked click it's parent 
+            hitEl = hitEl.parent;
         }
+        clickFunction(hitEl, hitEl?.name);
     }
 
     document.addEventListener('mousemove', mouseMove, false);

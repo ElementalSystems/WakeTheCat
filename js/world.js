@@ -2,32 +2,42 @@ import * as THREE from 'three';
 import { textures } from './textures.js';
 import { initMouse } from './mouse.js';
 import { objF } from './objects.js';
+import { callEachFrame, siso, inter } from './util.js';
+
 
 function makeLevel() {
     const puzzle = new THREE.Object3D();
     const pieces = [];
 
     const addP = (name, ob, target = 0, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) => {
-        ob.position.set(x, y, z);
-        ob.rotation.set(rx, ry, rz);
+        const posNode = new THREE.Object3D();
+        posNode.name = name;
+        posNode.position.set(x, y, z);
+        posNode.rotation.set(rx, ry, rz);
+        posNode.add(ob);
+
+        //figure out who to connect it to
         const tnode = target ? pieces[target].node : puzzle
-        tnode.add(ob);
+        tnode.add(posNode);
         pieces[name] = {
             node: ob,
             st: 0,
         };
     }
 
-    addP('b1', objF.basket(), false, 0, 5, 0, .2, 0);
     addP('n1', objF.needle(), false, 10, 15, 0);
     addP('n2', objF.needle(), false, -8, 12, 0, 3.14 / 3);
-    addP('n3', objF.needle(), 'b1', 0, 10);
+    addP('n3', objF.needle(), 'n1', 0, 4, -4, 3.14 / 2);
+    addP('n4', objF.needle(), false, 0, 10);
+    addP('b1', objF.basket(), 'n4', 0, 5);
 
     return {
         node: puzzle,
         pieces: pieces,
     }
 }
+
+
 
 export function makeWorld() {
 
@@ -39,7 +49,7 @@ export function makeWorld() {
 
     document.body.appendChild(renderer.domElement);
 
-    const scene = new THREE.Scene();
+    const scene = new THREE.Scene(); //root node to control the full image
 
     // Camera
     const camera = new THREE.PerspectiveCamera(
@@ -75,13 +85,27 @@ export function makeWorld() {
     directionalLight.shadow.camera.bottom = -100;
     scene.add(directionalLight);
 
+    const movePiece = (p) => {
+        let sts = p.node.sts;
+        let os = p.st;
+        let ns = (os + 1) % (sts.length);
+        callEachFrame(
+            500,
+            (r) => {
+                console.log("Setting Position:", os, ns, r);
+                p.node.position.set(inter(r, sts[os].x, sts[ns].x, siso), inter(r, sts[os].y, sts[ns].y, siso), inter(r, sts[os].z, sts[ns].z, siso));
+                p.node.rotation.set(inter(r, sts[os].rx, sts[ns].rx, siso), inter(r, sts[os].ry, sts[ns].ry, siso), inter(r, sts[os].rz, sts[ns].rz, siso));
+            },
+            () => { p.st = ns; }
+        );
 
-    var lev = makeLevel();
-    scene.add(lev.node);
+    }
 
 
-    initMouse(scene, camera, (el) => {
-        console.log("Something clicked ", el);
+    initMouse(scene, camera, (el, name) => {
+        console.log("Something clicked ", name, el);
+        if (name) console.log(lev.pieces[name]);
+        movePiece(lev.pieces[name]);
     });
 
     // Render Loop
@@ -97,5 +121,8 @@ export function makeWorld() {
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
+
+    var lev = makeLevel();
+    scene.add(lev.node);
 
 }

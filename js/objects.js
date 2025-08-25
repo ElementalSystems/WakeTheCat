@@ -3,22 +3,23 @@ import { textures } from './textures.js';
 
 
 function makeCO(mat, objs, sts = []) {
-    const top = new THREE.Group();
-    const bits = [top];
+    const group = new THREE.Group();
+    const bits = [group];
     objs.forEach(geo => {
         var mesh = new THREE.Mesh(geo, mat);
         mesh.castShadow = true;
         bits.push(mesh);
-        top.add(mesh);
+        group.add(mesh);
     });
     const controller = new THREE.Object3D();
     controller.bits = bits; //expose the bits for later substate animations
     //map out all the states explicitly and add a zero state
     controller.sts = [{}, ...sts].map(v => ({ x: v.x ?? 0, y: v.y ?? 0, z: v.z ?? 0, rx: v.rx ?? 0, ry: v.ry ?? 0, rz: v.rz ?? 0 }));
-    controller.add(top);
+    controller.add(group);
     return controller;
 }
 
+//The object fatcories build basic puzzle peices.
 export const objF = {
     basket: () => makeCO(
         new THREE.MeshStandardMaterial({
@@ -48,7 +49,7 @@ export const objF = {
             new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, 3.5, 0),
         ],
         [
-            { x: 5 } //state 1 = slide left
+            { y: -8 } //state 1 = slide left
         ]
     ),
 };
