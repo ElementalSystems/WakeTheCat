@@ -33,6 +33,7 @@ export function makeWorld() {
 
     // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.xr.enabled = true;
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.shadowMap.enabled = true; // enable shadow maps
 

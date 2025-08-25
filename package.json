@@ -1,0 +1,24 @@
+{
+  "name": "wakethecat",
+  "version": "1.0.0",
+  "description": "A JS13kgames 2025 WEBVR three.js Entry",
+  "main": "index.js",
+  "scripts": {
+    "serve": "live-server . --host=localhost --port=8080"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ElementalSystems/WakeTheCat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ElementalSystems/WakeTheCat/issues"
+  },
+  "homepage": "https://github.com/ElementalSystems/WakeTheCat#readme",
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "live-server": "^1.2.2"
+  }
+}
