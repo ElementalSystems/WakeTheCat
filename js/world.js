@@ -2,34 +2,45 @@ import * as THREE from 'three';
 import { textures } from './textures.js';
 import { initMouse } from './mouse.js';
 import { objF } from './objects.js';
-import { callEachFrame, siso, inter } from './util.js';
+import { callEachFrame, siso, inter, si, so } from './util.js';
 
 
 function makeLevel() {
     const puzzle = new THREE.Object3D();
     const pieces = [];
 
-    const addP = (name, ob, target = 0, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) => {
+    const addP = (name, ob, p, rls = []) => {
         const posNode = new THREE.Object3D();
         posNode.name = name;
-        posNode.position.set(x, y, z);
-        posNode.rotation.set(rx, ry, rz);
+        Object.assign(posNode, p?.add);
+        posNode.position.set(p.x ?? 0, p.y ?? 0, p.z ?? 0);
+        posNode.rotation.set(p.rx ?? 0, p.ry ?? 0, p.rz ?? 0);
         posNode.add(ob);
 
         //figure out who to connect it to
-        const tnode = target ? pieces[target].node : puzzle
+        const tnode = p.parent ? pieces[p.parent].node : puzzle
         tnode.add(posNode);
         pieces[name] = {
             node: ob,
             st: 0,
+            rls,
         };
     }
 
-    addP('n1', objF.needle(), false, 10, 15, 0);
-    addP('n2', objF.needle(), false, -8, 12, 0, 3.14 / 3);
-    addP('n3', objF.needle(), 'n1', 0, 4, -4, 3.14 / 2);
-    addP('n4', objF.needle(), false, 0, 10);
-    addP('b1', objF.basket(), 'n4', 0, 5);
+    addP('n1', objF.needle(), { x: 10, y: 16 },
+        [
+            { st: 1, con: [{ o: 'n2', st: 0 }], res: .6 }
+        ]
+    );
+    addP('n2', objF.needle(), { x: 10, y: 8, rx: 3.14 / 2 },
+        [
+            { st: 0, con: [{ o: 'n1', st: 1 }], res: .4 },
+        ]
+    );
+
+
+    addP('n4', objF.needle(), { y: 5 });
+    addP('b1', objF.basket(), { parent: 'n4', y: 5, add: { passDown: true } });
 
     return {
         node: puzzle,
@@ -85,28 +96,8 @@ export function makeWorld() {
     directionalLight.shadow.camera.bottom = -100;
     scene.add(directionalLight);
 
-    const movePiece = (p) => {
-        let sts = p.node.sts;
-        let os = p.st;
-        let ns = (os + 1) % (sts.length);
-        callEachFrame(
-            500,
-            (r) => {
-                console.log("Setting Position:", os, ns, r);
-                p.node.position.set(inter(r, sts[os].x, sts[ns].x, siso), inter(r, sts[os].y, sts[ns].y, siso), inter(r, sts[os].z, sts[ns].z, siso));
-                p.node.rotation.set(inter(r, sts[os].rx, sts[ns].rx, siso), inter(r, sts[os].ry, sts[ns].ry, siso), inter(r, sts[os].rz, sts[ns].rz, siso));
-            },
-            () => { p.st = ns; }
-        );
-
-    }
 
 
-    initMouse(scene, camera, (el, name) => {
-        console.log("Something clicked ", name, el);
-        if (name) console.log(lev.pieces[name]);
-        movePiece(lev.pieces[name]);
-    });
 
     // Render Loop
     function animate() {
@@ -124,5 +115,77 @@ export function makeWorld() {
 
     var lev = makeLevel();
     scene.add(lev.node);
+
+    const movePiece = (p) => {
+        let sts = p.node.sts;
+        let os = p.st;
+        let ns = (os + 1) % (sts.length);
+
+        //do the rules analysis
+        var out = p.rls
+            .filter(v => v.st === ns) //only the rules for the new state
+            .reduce((acc, rl) =>
+                (rl.con.every(c => lev.pieces[c.o].st === c.st)) ? ((acc < rl.res) ? acc : rl.res) : acc //all conditions met 
+                , 10);
+        var dur = 500;
+        if (out < 1) { //this ain't happening
+            //got some way forward in some of the time
+            callEachFrame(dur * out,
+                (r) => {
+                    p.node.position.set(
+                        inter(r, sts[os].x, inter(out, sts[os].x, sts[ns].x), si),
+                        inter(r, sts[os].y, inter(out, sts[os].y, sts[ns].y), si),
+                        inter(r, sts[os].z, inter(out, sts[os].z, sts[ns].z), si)
+                    );
+                    p.node.rotation.set(
+                        inter(r, sts[os].rx, inter(out, sts[os].rx, sts[ns].rx), si),
+                        inter(r, sts[os].ry, inter(out, sts[os].ry, sts[ns].ry), si),
+                        inter(r, sts[os].rz, inter(out, sts[os].rz, sts[ns].rz), si)
+                    );
+                },
+                () => {
+                    //TODO:  Play the crash sound
+                    //TODO:  Wait a little bit
+                    //then go back
+                    callEachFrame(dur * out,
+                        (r) => {
+                            p.node.position.set(
+                                inter(r, inter(out, sts[os].x, sts[ns].x), sts[os].x, so),
+                                inter(r, inter(out, sts[os].y, sts[ns].y), sts[os].y, so),
+                                inter(r, inter(out, sts[os].z, sts[ns].z), sts[os].z, so)
+                            );
+                            p.node.rotation.set(
+                                inter(r, inter(out, sts[os].rx, sts[ns].rx), sts[os].rx, so),
+                                inter(r, inter(out, sts[os].ry, sts[ns].ry), sts[os].ry, so),
+                                inter(r, inter(out, sts[os].rz, sts[ns].rz), sts[os].rz, so)
+                            );
+                        },
+                        () => { //all done                          
+                        }
+                    );
+
+
+                }
+            )
+        } else { //complete the move
+            callEachFrame(
+                dur,
+                (r) => {
+                    p.node.position.set(inter(r, sts[os].x, sts[ns].x, siso), inter(r, sts[os].y, sts[ns].y, siso), inter(r, sts[os].z, sts[ns].z, siso));
+                    p.node.rotation.set(inter(r, sts[os].rx, sts[ns].rx, siso), inter(r, sts[os].ry, sts[ns].ry, siso), inter(r, sts[os].rz, sts[ns].rz, siso));
+                },
+                () => {
+                    p.st = ns; //sets the new state 
+                }
+            );
+        }
+
+
+    }
+
+
+    initMouse(scene, camera, (el, name) => {
+        movePiece(lev.pieces[name]);
+    });
 
 }

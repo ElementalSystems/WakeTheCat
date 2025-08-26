@@ -54,7 +54,7 @@ export function reRange(st, ed, func) {
     }
 }
 
-export function inter(r, st, end, func) {
+export function inter(r, st, end, func = null) {
     if (r < 0) r = 0;
     if (r > 1) r = 1;
     if (func) r = func(r);
