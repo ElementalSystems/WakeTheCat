@@ -27,6 +27,7 @@ function makeCO(mat, objs, sts = []) {
         node: b,
         sts: getSubstates(i, [{}, ...sts]),
     }));
+    console.log(controller.bits);
     controller.add(group);
     return controller;
 }
