@@ -29,12 +29,12 @@ function makeLevel() {
 
     addP('n1', objF.needle(), { x: 10, y: 16 },
         [
-            { st: 1, con: [{ o: 'n2', st: 0 }], res: .6 }
+            { st: 1, con: [{ o: 'n2', st: 0 }], res: .3 }
         ]
     );
     addP('n2', objF.needle(), { x: 10, y: 8, rx: 3.14 / 2 },
         [
-            { st: 0, con: [{ o: 'n1', st: 1 }], res: .4 },
+            { st: 0, con: [{ o: 'n1', st: 1 }], res: .48 },
         ]
     );
 
@@ -42,12 +42,38 @@ function makeLevel() {
     addP('n4', objF.needle(), { y: 5 });
     addP('b1', objF.basket(), { parent: 'n4', y: 5, add: { passDown: true } });
 
+    addP('p1', objF.press(), { x: -12, y: 2 });
+    addP('p2', objF.press(), { parent: 'p1', y: 5, rx: 3.14 / 2 });
+    addP('p3', objF.press(), { parent: 'p2', y: 5, rz: -3.14 / 2 });
+
     return {
         node: puzzle,
         pieces: pieces,
     }
 }
 
+const setNode = (node, os, ns, sr, er, ipf, r) => {
+    node.position.set(
+        inter(r, inter(sr, os.x, ns.x), inter(er, os.x, ns.x), ipf),
+        inter(r, inter(sr, os.y, ns.y), inter(er, os.y, ns.y), ipf),
+        inter(r, inter(sr, os.z, ns.z), inter(er, os.z, ns.z), ipf),
+    );
+    node.rotation.set(
+        inter(r, inter(sr, os.rx, ns.rx), inter(er, os.rx, ns.rx), ipf),
+        inter(r, inter(sr, os.ry, ns.ry), inter(er, os.ry, ns.ry), ipf),
+        inter(r, inter(sr, os.rz, ns.rz), inter(er, os.rz, ns.rz), ipf),
+    );
+
+}
+
+const moveP = (p, dur, os, ns, sr, er, ipf, after) => {
+    callEachFrame(dur, (r) => {
+        setNode(p.node, p.node.sts[os], p.node.sts[ns], sr, er, ipf, r);
+        p.node.bits.forEach(b => {
+            if (b.sts) setNode(b.node, b.sts[os], b.sts[ns], sr, er, ipf, r);
+        });
+    }, after);
+}
 
 
 export function makeWorld() {
@@ -116,6 +142,7 @@ export function makeWorld() {
     var lev = makeLevel();
     scene.add(lev.node);
 
+
     const movePiece = (p) => {
         let sts = p.node.sts;
         let os = p.st;
@@ -130,56 +157,26 @@ export function makeWorld() {
         var dur = 500;
         if (out < 1) { //this ain't happening
             //got some way forward in some of the time
-            callEachFrame(dur * out,
-                (r) => {
-                    p.node.position.set(
-                        inter(r, sts[os].x, inter(out, sts[os].x, sts[ns].x), si),
-                        inter(r, sts[os].y, inter(out, sts[os].y, sts[ns].y), si),
-                        inter(r, sts[os].z, inter(out, sts[os].z, sts[ns].z), si)
-                    );
-                    p.node.rotation.set(
-                        inter(r, sts[os].rx, inter(out, sts[os].rx, sts[ns].rx), si),
-                        inter(r, sts[os].ry, inter(out, sts[os].ry, sts[ns].ry), si),
-                        inter(r, sts[os].rz, inter(out, sts[os].rz, sts[ns].rz), si)
-                    );
-                },
+            moveP(p, dur * out, os, ns, 0, out, si,
                 () => {
                     //TODO:  Play the crash sound
-                    //TODO:  Wait a little bit
+                    setTimeout(() => {
+                        moveP(p, dur * out, os, ns, out, 0, so,
+                            () => { }
+                        )
+                    }, 200);
                     //then go back
-                    callEachFrame(dur * out,
-                        (r) => {
-                            p.node.position.set(
-                                inter(r, inter(out, sts[os].x, sts[ns].x), sts[os].x, so),
-                                inter(r, inter(out, sts[os].y, sts[ns].y), sts[os].y, so),
-                                inter(r, inter(out, sts[os].z, sts[ns].z), sts[os].z, so)
-                            );
-                            p.node.rotation.set(
-                                inter(r, inter(out, sts[os].rx, sts[ns].rx), sts[os].rx, so),
-                                inter(r, inter(out, sts[os].ry, sts[ns].ry), sts[os].ry, so),
-                                inter(r, inter(out, sts[os].rz, sts[ns].rz), sts[os].rz, so)
-                            );
-                        },
-                        () => { //all done                          
-                        }
-                    );
 
 
                 }
             )
         } else { //complete the move
-            callEachFrame(
-                dur,
-                (r) => {
-                    p.node.position.set(inter(r, sts[os].x, sts[ns].x, siso), inter(r, sts[os].y, sts[ns].y, siso), inter(r, sts[os].z, sts[ns].z, siso));
-                    p.node.rotation.set(inter(r, sts[os].rx, sts[ns].rx, siso), inter(r, sts[os].ry, sts[ns].ry, siso), inter(r, sts[os].rz, sts[ns].rz, siso));
-                },
+            moveP(p, 500, os, ns, 0, 1, siso,
                 () => {
-                    p.st = ns; //sets the new state 
+                    p.st = ns; //sets the new state
                 }
             );
         }
-
 
     }
 

@@ -1,6 +1,14 @@
 import * as THREE from 'three';
 import { textures } from './textures.js';
 
+//Maps a partial states to a state
+const cStates = (v) => ({ x: v.x ?? 0, y: v.y ?? 0, z: v.z ?? 0, rx: v.rx ?? 0, ry: v.ry ?? 0, rz: v.rz ?? 0 });
+
+function getSubstates(i, sts) {
+    if (!sts.some(s => s.sub && s.sub[i])) return null;
+    return sts.map(s => s.sub && s.sub[i] ? s.sub[i] : {})
+        .map(cStates);
+}
 
 function makeCO(mat, objs, sts = []) {
     const group = new THREE.Group();
@@ -12,14 +20,19 @@ function makeCO(mat, objs, sts = []) {
         group.add(mesh);
     });
     const controller = new THREE.Object3D();
-    controller.bits = bits; //expose the bits for later substate animations
     //map out all the states explicitly and add a zero state
-    controller.sts = [{}, ...sts].map(v => ({ x: v.x ?? 0, y: v.y ?? 0, z: v.z ?? 0, rx: v.rx ?? 0, ry: v.ry ?? 0, rz: v.rz ?? 0 }));
+    controller.sts = [{}, ...sts].map(cStates);
+    //map out substates for every bit
+    controller.bits = bits.map((b, i) => ({
+        node: b,
+        sts: getSubstates(i, [{}, ...sts]),
+    }));
+    console.log(controller.bits);
     controller.add(group);
     return controller;
 }
 
-//The object fatcories build basic puzzle peices.
+//The object factories build basic puzzle peices.
 export const objF = {
     basket: () => makeCO(
         new THREE.MeshStandardMaterial({
@@ -51,5 +64,23 @@ export const objF = {
         [
             { y: -8 } //state 1 = slide left
         ]
+    ),
+    press: () => makeCO(
+        new THREE.MeshStandardMaterial({
+            map: textures.frame,
+            metalness: 0,
+            roughness: 0.5
+        }),
+        [
+            new THREE.CylinderGeometry(2, 2, 4, 8, 4),
+            new THREE.CylinderGeometry(1.5, 1.5, 4, 8, 4).translate(0, .5, 0),
+            new THREE.CylinderGeometry(1, 1, 4, 8, 4).translate(0, 1, 0),
+            new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
+            new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
+        ],
+        [
+            { y: 3, sub: { 1: { y: -3 } } },
+            { y: 6, sub: { 2: { y: -3 }, 1: { y: -6 } } }
+        ],
     ),
 };
