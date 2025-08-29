@@ -51,6 +51,8 @@ function makeLevel() {
     addP('w2', objF.wheel(), { x: 13, y: 1, z: 10 })
     addP('b2', objF.basket(), { parent: 'w2', z: 9, y: 1, add: { passDown: true } });
 
+    addP('s1', objF.sign("Snowflake", "Trusting little", "kitten", "easy to scare"), { x: 0, z: 5 })
+    addP('s2', objF.sign("Midnight", "", "Skittish", "sleeps safe"), { parent: 'w2', x: 0, z: -6 })
     return {
         node: puzzle,
         pieces: pieces,
@@ -173,7 +175,7 @@ export function makeWorld() {
                 }
             )
         } else { //complete the move
-            moveP(p, 500, os, ns, 0, 1, siso,
+            moveP(p, dur, os, ns, 0, 1, siso,
                 () => {
                     p.st = ns; //sets the new state
                     if (p.node.wrapState && (ns == sts.length - 1)) {// the last one needs to wrap

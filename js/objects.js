@@ -63,27 +63,37 @@ export const objF = {
             new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, 3.5, 0),
         ],
         [
-            { y: -8 } //state 1 = slide left
+            { y: -8, sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
         ]
     ),
-    press: () => makeCO(
-        new THREE.MeshStandardMaterial({
+    press: () => {
+        var main = new THREE.MeshStandardMaterial({
             map: textures.frame,
             metalness: 0,
             roughness: 0.5
-        }),
-        [
-            new THREE.CylinderGeometry(2, 2, 4, 8, 4),
-            new THREE.CylinderGeometry(1.5, 1.5, 4, 8, 4).translate(0, .5, 0),
-            new THREE.CylinderGeometry(1, 1, 4, 8, 4).translate(0, 1, 0),
-            new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
-            new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
-        ],
-        [
-            { y: 3, sub: { 1: { y: -3 } } },
-            { y: 6, sub: { 2: { y: -3 }, 1: { y: -6 } } }
-        ],
-    ),
+        });
+        var silver = new THREE.MeshStandardMaterial({
+            bumpMap: textures.wood,
+            bumpScale: .5,
+            color: "#FFD",
+            metalness: 0.9,
+            roughness: 0.1
+        });
+        return makeCO(
+            [main, silver, silver],
+            [
+                new THREE.CylinderGeometry(2, 2, 4, 8, 4),
+                new THREE.CylinderGeometry(1.5, 1.5, 4, 20, 4).translate(0, .5, 0),
+                new THREE.CylinderGeometry(1, 1, 4, 20, 4).translate(0, 1, 0),
+                new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
+                new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
+            ],
+            [
+                { y: 3, sub: { 1: { y: -3 }, 2: { ry: -3.14 * 8 } } },
+                { y: 6, sub: { 1: { y: -6 }, 2: { y: -3, ry: -3.14 * 8 }, 3: { ry: 3.14 * 8 }, } }
+            ],
+        )
+    },
     wheel: () => makeCO(
         new THREE.MeshStandardMaterial({
             color: "#FF0",
@@ -107,4 +117,29 @@ export const objF = {
             wrapState: true,
         }
     ),
+    sign: (t, l1, l2, l3) => {
+
+        return makeCO(
+            [
+                new THREE.MeshStandardMaterial({
+                    color: "#060",
+                    metalness: 0,
+                    roughness: 1
+                }),
+                new THREE.MeshStandardMaterial({
+                    //map: textures.text(t, l1, l2, l3),
+                    map: textures.text(t, l1, l2, l3, "#000", "#999"),
+                    bumpMap: textures.text(t, l1, l2, l3, "#000", "#FFF"),
+                    bumpScale: 4,
+                }),
+            ],
+            [
+                new THREE.BoxGeometry(6, 6, .1).translate(0, 8, 0),
+                new THREE.BoxGeometry(5.5, 5.5, .1).translate(0, 8, .1),
+                new THREE.BoxGeometry(.5, 6, .5).translate(0, 2.5, 0),
+            ],
+
+        );
+
+    }
 };
