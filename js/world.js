@@ -42,9 +42,14 @@ function makeLevel() {
     addP('n4', objF.needle(), { y: 5 });
     addP('b1', objF.basket(), { parent: 'n4', y: 5, add: { passDown: true } });
 
-    addP('p1', objF.press(), { x: -12, y: 2 });
+
+    addP('w1', objF.wheel(), { x: -13, y: 1, z: 0 })
+    addP('p1', objF.press(), { parent: 'w1', x: 0, y: 2 });
     addP('p2', objF.press(), { parent: 'p1', y: 5, rx: 3.14 / 2 });
     addP('p3', objF.press(), { parent: 'p2', y: 5, rz: -3.14 / 2 });
+
+    addP('w2', objF.wheel(), { x: 13, y: 1, z: 10 })
+    addP('b2', objF.basket(), { parent: 'w2', z: 9, y: 1, add: { passDown: true } });
 
     return {
         node: puzzle,
@@ -165,15 +170,16 @@ export function makeWorld() {
                             () => { }
                         )
                     }, 200);
-                    //then go back
-
-
                 }
             )
         } else { //complete the move
             moveP(p, 500, os, ns, 0, 1, siso,
                 () => {
                     p.st = ns; //sets the new state
+                    if (p.node.wrapState && (ns == sts.length - 1)) {// the last one needs to wrap
+                        p.st = 0;
+                        moveP(p, 1, ns, 0, 0, 1);
+                    }
                 }
             );
         }

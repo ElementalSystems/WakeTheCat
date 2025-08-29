@@ -1,20 +1,21 @@
 import * as THREE from 'three';
 import { textures } from './textures.js';
 
-//Maps a partial states to a state
+//Maps a partial states into fulkl valid state
 const cStates = (v) => ({ x: v.x ?? 0, y: v.y ?? 0, z: v.z ?? 0, rx: v.rx ?? 0, ry: v.ry ?? 0, rz: v.rz ?? 0 });
 
 function getSubstates(i, sts) {
-    if (!sts.some(s => s.sub && s.sub[i])) return null;
-    return sts.map(s => s.sub && s.sub[i] ? s.sub[i] : {})
+    if (!sts.some(s => s.sub && s.sub[i])) return null; //if the bit has no substate forget it
+    return sts.map(s => s.sub && s.sub[i] ? s.sub[i] : {}) //otherwise force full substate for all states 
         .map(cStates);
 }
 
-function makeCO(mat, objs, sts = []) {
+function makeCO(mat, objs, sts = [], add = {}) {
     const group = new THREE.Group();
     const bits = [group];
-    objs.forEach(geo => {
-        var mesh = new THREE.Mesh(geo, mat);
+    objs.forEach((geo, i) => {
+        var bmat = Array.isArray(mat) ? (mat[i] ?? mat[0]) : mat;
+        var mesh = new THREE.Mesh(geo, bmat);
         mesh.castShadow = true;
         bits.push(mesh);
         group.add(mesh);
@@ -27,6 +28,7 @@ function makeCO(mat, objs, sts = []) {
         node: b,
         sts: getSubstates(i, [{}, ...sts]),
     }));
+    Object.assign(controller, add);
     controller.add(group);
     return controller;
 }
@@ -81,5 +83,28 @@ export const objF = {
             { y: 3, sub: { 1: { y: -3 } } },
             { y: 6, sub: { 2: { y: -3 }, 1: { y: -6 } } }
         ],
+    ),
+    wheel: () => makeCO(
+        new THREE.MeshStandardMaterial({
+            color: "#FF0",
+            metalness: .9,
+            roughness: 0
+        }),
+        [
+            new THREE.TorusGeometry(6, .4, 10, 30).rotateX(3.14 / 2),
+            new THREE.TorusGeometry(1.5, .6, 10, 30).rotateX(3.14 / 2),
+            new THREE.CapsuleGeometry(.3, 7, 5, 10, 3).rotateX(3.14 / 2).translate(0, 0, 5),
+            new THREE.CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(3.14 * 2 / 3),
+            new THREE.CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(-3.14 * 2 / 3),
+        ],
+        [
+            { ry: 3.14 / 2 },
+            { ry: 3.14 },
+            { ry: 3.14 * 3 / 2 },
+            { ry: 3.14 * 2 },
+        ],
+        {
+            wrapState: true,
+        }
     ),
 };

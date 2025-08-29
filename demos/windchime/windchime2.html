@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>WindChime Demo</title>
+</head>
+
+<body>
+    <hr />
+    Western Pentatonic
+    <button onclick="chimes(
+        { t:[0,2,4,7,9], o:[2,3,3,3,4], d:[10,20,25], vs:.1, ve:1, gs:.2, ge:1 }
+    )">Major</button>
+    <button onclick="chimes(
+        { t:[0,3,5,7,10], o:[2,3,3,3,4], d:[10,20,25], vs:.1, ve:1, gs:.1, ge:2 }
+    )">Minor Slow</button>
+    <hr />
+    Egyptian Pentatonic
+    <button onclick="chimes(
+        { t:[0,2,5,7,10], o:[3,3,4,5,6], d:[5,10,15], vs:.1, ve:.5, gs:.2, ge:.5 }
+    )">
+        Fast and high</button>
+    <hr />
+    Japanese
+    <button onclick="chimes(
+        { t:[0,1,5,7,10], o:[2,3,3,4,5], d:[10,15,25], vs:.1, ve:1, gs:1, ge:2 }
+    )"> In Sen - Slow</button>
+    <button onclick="chimes(
+        { t:[0,2,5,7,9], o:[2,3,3,4,5], d:[10,15,25], vs:.1, ve:.5, gs:.2, ge:.5 }
+    )"> Yo - Busy</button>
+    <hr />
+    Balenese
+    <button onclick="chimes(
+        { t:[0, 2, 5, 7, 10], o:[2,3,3], d:[5,10,15,25], vs:.1, ve:.5, gs:.2, ge:2 }
+    )"> Slendro </button>
+    <button onclick="chimes(
+        { t:[0, 1, 3, 7, 8, 10, 11], o:[2,3,3], d:[5,10,15,25], vs:.1, ve:.5, gs:.2, ge:2 }
+    )"> Pelog </button>
+    <hr />
+    <button onclick="chimes()">Silence It All</button>
+
+
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Convert note name (like "C4", "F#3") to frequency in Hz
+        //SemiTone Codes
+        // C  = 0
+        // C# = 1
+        // D  = 2
+        // D# = 3
+        // E  = 4
+        // F  = 5
+        // F# = 6
+        // G  = 7
+        // G# = 8
+        // A  = 9
+        // A# = 10
+        // B  = 11
+        // Chime sound generator
+        function playGong(STC, oct, dur = 10, v = 1) {
+            const baseFreq = 440 * Math.pow(2, (oct * 12 + STC - 57) / 12);
+            const now = audioCtx.currentTime;
+
+            const master = audioCtx.createGain();
+            master.gain.setValueAtTime(0.2 * v, now).exponentialRampToValueAtTime(0.0001, now + dur);
+            master.connect(audioCtx.destination);
+
+            // Fundamental
+            makeTone(baseFreq, master, now, dur);
+
+            // Gong-like inharmonic partials
+            makeTone(baseFreq * 2.01, master, now, dur * 0.9);
+            makeTone(baseFreq * 2.62, master, now, dur * 0.7);
+            makeTone(baseFreq * 3.95, master, now, dur * 0.5);
+        }
+
+        // Helper: tone with exponential decay
+        function makeTone(freq, destination, startTime, duration) {
+            const osc = audioCtx.createOscillator();
+            osc.frequency.setValueAtTime(freq, startTime);
+
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(1, startTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
+
+            osc.connect(gain).connect(destination);
+            osc.start(startTime);
+            osc.stop(startTime + duration);
+        }
+
+        var _c = null;
+
+        randR = (s, e) => Math.random() * (e - s) + s
+
+        randA = (a) => a[Math.floor(Math.random() * a.length)];
+
+        function _chime() {
+            if (!_c) return;
+            playGong(randA(_c.t), randA(_c.o), randA(_c.d), randR(_c.vs, _c.ve));
+            setTimeout(_chime, randR(_c.gs, _c.ge) * 1000);
+        }
+
+        function chimes(c = null) {
+            if (!_c) setTimeout(_chime, 100); //start it if we need to
+            _c = c;
+        }
+
+    </script>
+</body>
+
+</html>
