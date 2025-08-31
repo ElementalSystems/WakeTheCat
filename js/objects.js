@@ -10,6 +10,25 @@ function getSubstates(i, sts) {
         .map(cStates);
 }
 
+function ringMesh(r, ir, h) {
+    const shape = new THREE.Shape();
+    shape.absarc(0, 0, r, 0, Math.PI * 2, false);
+
+    const holePath = new THREE.Path();
+    holePath.absarc(0, 0, ir, 0, Math.PI * 2, true);
+    shape.holes.push(holePath);
+
+    return new THREE.ExtrudeGeometry(shape, {
+        depth: h,        // extrusion depth (along +Z by default)
+        steps: 3,                // low steps -> vertical sides
+        curveSegments: 32,
+        bevelEnabled: true,
+        bevelThickness: h / 3,   // how “tall” the bevel is
+        bevelSize: h / 3,        // how far inward the bevel goes
+        bevelSegments: 3
+    });
+}
+
 function makeCO(mat, objs, sts = [], add = {}) {
     const group = new THREE.Group();
     const bits = [group];
@@ -115,12 +134,14 @@ export const objF = {
     wheel: () => makeCO(
         new THREE.MeshStandardMaterial({
             color: "#FF0",
+            bumpMap: textures.pitted(),
+            bumpScale: .5,
             metalness: .9,
-            roughness: 0
+            roughness: 0.1
         }),
         [
-            new THREE.TorusGeometry(6, .4, 10, 30).rotateX(3.14 / 2),
-            new THREE.TorusGeometry(1.5, .6, 10, 30).rotateX(3.14 / 2),
+            ringMesh(6, 5, 1).rotateX(3.14 / 2).translate(0, .5, 0),
+            ringMesh(1.5, 1, 1).rotateX(3.14 / 2).translate(0, .5, 0),
             new THREE.CapsuleGeometry(.3, 7, 5, 10, 3).rotateX(3.14 / 2).translate(0, 0, 5),
             new THREE.CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(3.14 * 2 / 3),
             new THREE.CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(-3.14 * 2 / 3),

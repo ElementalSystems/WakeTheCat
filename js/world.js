@@ -84,7 +84,7 @@ export function makeWorld() {
     // The world plane
     const planeGeometry = new THREE.PlaneGeometry(500, 500);
     const planeMaterial = new THREE.MeshStandardMaterial({
-        map: textures.squares,
+        map: textures.pitted(),
     });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.receiveShadow = true; // plane will receive shadows

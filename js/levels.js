@@ -16,7 +16,7 @@ export const levF = {
         { n: 'n4', g: objF.needle(), p: { y: 5 } },
         { n: 'b1', g: objF.basket(), p: { parent: 'n4', y: 5, add: { passDown: true } } },
         { n: 'w1', g: objF.wheel(), p: { x: -13, y: 1, z: 0 } },
-        { n: 'p1', g: objF.press(), p: { parent: 'w1', x: 0, y: 2 } },
+        { n: 'p1', g: objF.press(), p: { parent: 'w1', x: 0, y: 3 } },
         { n: 'p2', g: objF.press(), p: { parent: 'p1', y: 5, rx: 3.14 / 2 } },
         { n: 'p3', g: objF.press(), p: { parent: 'p2', y: 5, rz: -3.14 / 2 } },
         { n: 'w2', g: objF.wheel(), p: { x: 13, y: 1, z: 10 } },

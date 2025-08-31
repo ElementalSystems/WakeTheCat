@@ -26,8 +26,12 @@ function makeCanvasTexture(drawFunc, bg = 0, repeat = 1, mirror = true) {
         ctx.ellipse(x, y, rx, ry, 0, 0, 3.14 * 2);
         ctx.fill();
     },
+        ctx.ellR = (x, y, rx, ry, c, r) => {
+            for (var i = 0; i < r; i += 1)
+                ctx.ell(x, y, rx / Math.pow(2, i), ry / Math.pow(2, i), c)
+        }
 
-        drawFunc(ctx);
+    drawFunc(ctx);
 
     var texture = new THREE.CanvasTexture(canvas);
     texture.wrapS = mirror ? THREE.MirroredRepeatWrapping : THREE.RepeatWrapping;
@@ -78,6 +82,13 @@ export const textures = {
             for (let y = -400; y < 800; y += 120) {
                 ctx.lineR(0, y + 256, 256, y + 0, c, 64, 5);
                 ctx.lineR(256, y, 512, y + 256, c, 64, 5);
+            }
+        }, bg, 2, true
+    ),
+    pitted: (c = "#0004", bg = "#FFF") => makeCanvasTexture(
+        (ctx) => {
+            for (let i = 0; i < 50; i += 1) {
+                ctx.ellR(ranR(0, 512), ranR(0, 512), ranR(10, 100), ranR(10, 100), c, 4);
             }
         }, bg, 2, true
     ),
