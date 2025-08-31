@@ -11,6 +11,8 @@ function unsetElementClass(e, cls) {
         e.classList.remove(cls);
 }
 
+export const ranR = (s, e) => s + Math.random() * (e - s);
+
 //a general animation or slow effect utility
 export function callEachFrame(time, each, end) {
     var startTime = 0;

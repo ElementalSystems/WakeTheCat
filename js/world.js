@@ -2,12 +2,13 @@ import * as THREE from 'three';
 import { textures } from './textures.js';
 import { initMouse } from './mouse.js';
 import { objF } from './objects.js';
+import { levF } from './levels.js'
 import { callEachFrame, siso, inter, si, so } from './util.js';
 
 
-function makeLevel() {
+function makeLevel(pcs) {
     const puzzle = new THREE.Object3D();
-    const pieces = [];
+    const pieces = {};
 
     const addP = (name, ob, p, rls = []) => {
         const posNode = new THREE.Object3D();
@@ -27,37 +28,14 @@ function makeLevel() {
         };
     }
 
-    addP('n1', objF.needle(), { x: 10, y: 16 },
-        [
-            { st: 1, con: [{ o: 'n2', st: 0 }], res: .3 }
-        ]
-    );
-    addP('n2', objF.needle(), { x: 10, y: 8, rx: 3.14 / 2 },
-        [
-            { st: 0, con: [{ o: 'n1', st: 1 }], res: .48 },
-        ]
-    );
-
-
-    addP('n4', objF.needle(), { y: 5 });
-    addP('b1', objF.basket(), { parent: 'n4', y: 5, add: { passDown: true } });
-
-
-    addP('w1', objF.wheel(), { x: -13, y: 1, z: 0 })
-    addP('p1', objF.press(), { parent: 'w1', x: 0, y: 2 });
-    addP('p2', objF.press(), { parent: 'p1', y: 5, rx: 3.14 / 2 });
-    addP('p3', objF.press(), { parent: 'p2', y: 5, rz: -3.14 / 2 });
-
-    addP('w2', objF.wheel(), { x: 13, y: 1, z: 10 })
-    addP('b2', objF.basket(), { parent: 'w2', z: 9, y: 1, add: { passDown: true } });
-
-    addP('s1', objF.sign("Snowflake", "Trusting little", "kitten", "easy to scare"), { x: 0, z: 5 })
-    addP('s2', objF.sign("Midnight", "", "Skittish", "sleeps safe"), { parent: 'w2', x: 0, z: -6 })
+    pcs.forEach(d => addP(d.n, d.g, d.p, d.r));
     return {
         node: puzzle,
         pieces: pieces,
     }
 }
+
+
 
 const setNode = (node, os, ns, sr, er, ipf, r) => {
     node.position.set(
@@ -106,7 +84,7 @@ export function makeWorld() {
     // The world plane
     const planeGeometry = new THREE.PlaneGeometry(500, 500);
     const planeMaterial = new THREE.MeshStandardMaterial({
-        side: THREE.DoubleSide, map: textures.squares,
+        map: textures.squares,
     });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.receiveShadow = true; // plane will receive shadows
@@ -146,7 +124,7 @@ export function makeWorld() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    var lev = makeLevel();
+    var lev = makeLevel(levF.l1());
     scene.add(lev.node);
 
 
@@ -160,7 +138,7 @@ export function makeWorld() {
             .filter(v => v.st === ns) //only the rules for the new state
             .reduce((acc, rl) =>
                 (rl.con.every(c => lev.pieces[c.o].st === c.st)) ? ((acc < rl.res) ? acc : rl.res) : acc //all conditions met 
-                , 10);
+                , 10000);
         var dur = 500;
         if (out < 1) { //this ain't happening
             //got some way forward in some of the time
@@ -177,6 +155,9 @@ export function makeWorld() {
         } else { //complete the move
             moveP(p, dur, os, ns, 0, 1, siso,
                 () => {
+                    if (out == 10) {  //we won!
+                        console.log("MEEEOW!");
+                    }
                     p.st = ns; //sets the new state
                     if (p.node.wrapState && (ns == sts.length - 1)) {// the last one needs to wrap
                         p.st = 0;
