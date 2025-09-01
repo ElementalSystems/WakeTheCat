@@ -84,7 +84,9 @@ export function makeWorld() {
     // The world plane
     const planeGeometry = new THREE.PlaneGeometry(500, 500);
     const planeMaterial = new THREE.MeshStandardMaterial({
-        map: textures.pitted(),
+        map: textures.pitted(4, 50),
+        color: "#800"
+
     });
     const plane = new THREE.Mesh(planeGeometry, planeMaterial);
     plane.receiveShadow = true; // plane will receive shadows
@@ -124,7 +126,7 @@ export function makeWorld() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    var lev = makeLevel(levF.test());
+    var lev = makeLevel(levF.l2());
     scene.add(lev.node);
 
 
@@ -137,9 +139,9 @@ export function makeWorld() {
         var out = p.rls
             .filter(v => v.st === ns) //only the rules for the new state
             .reduce((acc, rl) =>
-                (rl.con.every(c => lev.pieces[c.o].st === c.st)) ? ((acc < rl.res) ? acc : rl.res) : acc //all conditions met 
+                (rl.con.every(c => ((Array.isArray(c.st) ? c.st : [c.st]).includes(lev.pieces[c.o].st))) ? ((acc < rl.res) ? acc : rl.res) : acc) //all conditions met 
                 , 10000);
-        var dur = 500;
+        var dur = 2000;
         if (out < 1) { //this ain't happening
             //got some way forward in some of the time
             moveP(p, dur * out, os, ns, 0, out, si,

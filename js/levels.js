@@ -29,11 +29,12 @@ export const levF = {
         { n: 'cat4', g: objF.cat(textures.tabby("#0004", "#FFF"), "#A80"), p: { x: 5, z: 15, y: 10 } },
         { n: 's1', g: objF.plat(), p: { x: 5, z: 10, y: 15 } },
         { n: 'cat5', g: objF.cat(textures.tabby("#0004", "#FFF"), "#CCC"), p: { parent: 's1', y: 1 } },
-
+        { n: 'gr1', g: objF.gRing(4), p: { parent: 'w1', x: -6, y: 4, add: { passDown: true } } },
+        { n: 'n4', g: objF.needle(), p: { parent: 'gr1', z: 4.5, y: 0, rx: 3.14 / 2 } },
     ],
     l1: () => [
         { n: 's1', g: objF.plat(5), p: { y: 5, ry: 1.5 } },
-        { n: 'cat5', g: objF.cat(null, "#FFC", "#48F"), p: { parent: 's1', y: 1, ry: -1 } },
+        { n: 'cat', g: objF.cat(null, "#FFC", "#48F"), p: { parent: 's1', y: 1, ry: -1 } },
         {
             n: 'n1', g: objF.needle(), p: { x: -13, y: 6, rz: 3.14 / 2 },
             r: [{ st: 1, con: [{ o: 'n2', st: 0 }], res: .3 },
@@ -41,6 +42,27 @@ export const levF = {
         },
         {
             n: 'n2', g: objF.needle(), p: { x: -5, y: 6, rz: 3.14 },
+        },
+    ],
+    l2: () => [
+
+        { n: 'w1', g: objF.wheel(), p: { y: 2, x: -1 } },
+        { n: 'b1', g: objF.basket(), p: { parent: "w1", y: 2, ry: 2.5, add: { passDown: true } } },
+        { n: 'cat', g: objF.cat(textures.tabby(), "#666", "#48F"), p: { parent: 'b1', y: 1, x: 1, ry: -4 } },
+        {
+            n: 'w2', g: objF.wheel(), p: { x: 11, y: 11, rx: -3.14 / 2, z: 3 },
+            r: [
+                { st: 1, con: [{ o: 'n1', st: 1 }], res: .75 },
+                { st: 3, con: [{ o: 'n1', st: 0 }], res: .1 },
+            ]
+        },
+        { n: 'gr1', g: objF.gRing(2), p: { parent: 'w2', x: 5.5, y: 3, add: { passDown: true } } },
+        {
+            n: 'n1', g: objF.needle(1), p: { parent: 'gr1', z: 4.2, rx: 3.14 / 2 },
+            r: [
+                { st: 1, con: [{ o: 'w2', st: 1 }, { o: 'w1', st: [0, 1, 3] }], res: .9 },
+                { st: 1, con: [{ o: 'w2', st: 1 }, { o: 'w1', st: 2 }], res: 10 },
+            ]
         },
 
 

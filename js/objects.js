@@ -84,6 +84,19 @@ export const objF = {
 
         ]
     ),
+    gRing: (h = 5) => makeCO(
+        new THREE.MeshStandardMaterial({
+            color: "#FF0",
+            bumpMap: textures.pitted(),
+            bumpScale: .5,
+            metalness: .9,
+            roughness: 0.1
+        }),
+        [
+            ringMesh(.6, .4, .3),
+            new THREE.BoxGeometry(.3, h, .3).translate(0, -h / 2 - .3, .15),
+        ],
+    ),
 
     needle: () => makeCO(
         new THREE.MeshStandardMaterial({
@@ -99,7 +112,7 @@ export const objF = {
             new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, 3.5, 0),
         ],
         [
-            { y: -8, sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
+            { y: -7, sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
         ]
     ),
     press: () => {

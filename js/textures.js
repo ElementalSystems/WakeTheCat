@@ -85,12 +85,12 @@ export const textures = {
             }
         }, bg, 2, true
     ),
-    pitted: (c = "#0004", bg = "#FFF") => makeCanvasTexture(
+    pitted: (r = 4, rep = 1) => makeCanvasTexture(
         (ctx) => {
             for (let i = 0; i < 50; i += 1) {
-                ctx.ellR(ranR(0, 512), ranR(0, 512), ranR(10, 100), ranR(10, 100), c, 4);
+                ctx.ellR(ranR(0, 512), ranR(0, 512), ranR(30, 100), ranR(30, 100), "#0004", 4);
             }
-        }, bg, 2, true
+        }, "#fff", rep, true
     ),
     diag: makeCanvasTexture((ctx) => {
         ctx.lineR(-100, 156, 356, 612, "#0008", 100, 4);
