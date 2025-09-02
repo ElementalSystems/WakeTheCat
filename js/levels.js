@@ -66,6 +66,80 @@ export const levF = {
         },
 
 
+    ],
+    l3: () => [
+        { n: 'w1', g: objF.wheel(), p: { y: 2 } },
+        { n: 's1', g: objF.plat(16), p: { parent: 'w1', y: 5, add: { passDown: true } } },
+        { n: 's2', g: objF.plat(12), p: { parent: 'w1', y: 9, x: 4, z: 4, add: { passDown: true } } },
+        { n: 's3', g: objF.plat(12), p: { parent: 'w1', y: 9, x: -4, z: -4, add: { passDown: true } } },
+        { n: 'cat', g: objF.cat(textures.tabby(), "#FA0", "#0F0"), p: { parent: 's1', y: 1, x: 2, ry: 3 } },
+
+        { n: 'n1', g: objF.needle(), p: { x: -7, y: 18, z: -3, is: 1 } },
+
+        { n: 'w2', g: objF.wheel(), p: { parent: 'n1', y: 3, ry: 3.14 / 8 } },
+    ],
+
+    l4: () => [
+
+        { n: 's1', g: objF.plat(11), p: { y: 11.5, x: -1 } },
+        { n: 'cat', g: objF.cat(textures.tabby(), "#FA0", "#0F0"), p: { parent: 's1', y: 1, ry: 1 } },
+        {
+            n: 'p1', g: objF.press(), p: { y: 2, x: 9 },
+            r: [
+                { st: 1, con: [{ o: 'n3', st: 0 }], res: .65 },
+                { st: 2, con: [{ o: 'n2', st: 0 }], res: .30 },
+                { st: 2, con: [{ o: 'n1', st: 1 }], res: .4 },
+            ]
+        },
+        { n: 'gr1', g: objF.gRing(1), p: { parent: 'p1', z: 1, y: 4.5, ry: 3.14 / 2, add: { passDown: true } } },
+        { n: 'gr2', g: objF.gRing(1), p: { parent: 'p1', z: -1, y: 4.5, ry: 3.14 / 2, add: { passDown: true } } },
+        {
+            n: 'n1', g: objF.needle(), p: { parent: 'gr1', z: 4.2, rx: 3.14 / 2 },
+            r: [{ st: 1, con: [{ o: 'p1', st: 2 }], res: 10 }]
+        },
+        {
+            n: 'n2', g: objF.needle(), p: { parent: 'gr2', z: -4.8, rx: -3.14 / 2 },
+        },
+        {
+            n: 'n3', g: objF.needle(), p: { x: 9, y: 13, rx: -3.14 },
+            r: [
+                { st: 0, con: [{ o: 'p1', st: 1 }], res: .85 },
+                { st: 0, con: [{ o: 'p1', st: 2 }], res: .4 }]
+        },
+
+    ],
+    l5: () => [
+
+        { n: 'b1', g: objF.basket(), p: { y: 14, x: -5, ry: -3.14 / 2 } },
+        { n: 'cat', g: objF.cat(textures.tabby(), "#FA0", "#0F0"), p: { parent: 'b1', y: 1, ry: 2 } },
+        {
+            n: 'p1', g: objF.press(), p: { y: 0.5, x: 5 },
+            r: [
+                { st: 1, con: [{ o: 'p3', st: [1, 2] }], res: .25 },
+                { st: 0, con: [{ o: 'p3', st: 1 }], res: .65 },
+                { st: 0, con: [{ o: 'p3', st: 2 }], res: 10 },
+            ]
+        },
+        {
+            n: 'p2', g: objF.press(), p: { parent: 'p1', y: 5 },
+            r: [
+                { st: 1, con: [{ o: 'p3', st: [1, 2] }], res: .25 },
+                { st: 0, con: [{ o: 'p3', st: 1 }], res: .65 },
+                { st: 0, con: [{ o: 'p3', st: 2 }], res: 10 },
+            ]
+        },
+        {
+            n: 'p3', g: objF.press(), p: { parent: 'p2', y: 5, rz: 3.14 / 2, is: 2 },
+            r: [
+                { st: 1, con: [{ o: 'p1', st: [1, 2] }, { o: 'p2', st: [0, 1] }], res: .2 },
+                { st: 1, con: [{ o: 'p1', st: [0, 1] }, { o: 'p2', st: [1, 2] }], res: .2 },
+            ]
+        },
+        { n: 'gr', g: objF.gRing(5), p: { parent: 'p3', x: 1, y: 3.7, rx: 3.14 / 2, rz: -3.14 / 2, is: 2 }, },
+        { n: 'gr2', g: objF.gRing(5), p: { parent: 'p3', x: 1, y: 4.2, rx: 3.14 / 2, rz: -3.14 / 2, is: 2 }, },
+
     ]
+
+
 
 };

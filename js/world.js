@@ -23,9 +23,11 @@ function makeLevel(pcs) {
         tnode.add(posNode);
         pieces[name] = {
             node: ob,
-            st: 0,
+            st: p.is || 0,
             rls,
         };
+        if (p.is) //set initial state
+            moveP(pieces[name], 1, 0, p.is, 0, 1);
     }
 
     pcs.forEach(d => addP(d.n, d.g, d.p, d.r));
@@ -126,7 +128,7 @@ export function makeWorld() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    var lev = makeLevel(levF.l2());
+    var lev = makeLevel(levF.l5());
     scene.add(lev.node);
 
 

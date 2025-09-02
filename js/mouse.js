@@ -16,7 +16,6 @@ export function initMouse(scene, camera, clickFunction) {
 
 
     function touchDown(evt) {
-        evt.preventDefault();
         uniDown(evt.touches[0].clientX, evt.touches[0].clientY);
     }
 
@@ -38,7 +37,6 @@ export function initMouse(scene, camera, clickFunction) {
     }
 
     function touchUp(evt) {
-        evt.preventDefault();
         uniUp(evt.changedTouches[0].clientX, evt.changedTouches[0].clientY);
     }
 
@@ -61,7 +59,6 @@ export function initMouse(scene, camera, clickFunction) {
     }
 
     function touchMove(evt) {
-        evt.preventDefault();
         uniMove(evt.touches[0].clientX, evt.touches[0].clientY);
     }
 
@@ -69,7 +66,7 @@ export function initMouse(scene, camera, clickFunction) {
         if (!dragNow) return;
         var xd = cx - dragStartX;
         var yd = cy - dragStartY;
-        scene.rotation.x = inRange(-.1, .3, dragStartRX + (yd / window.innerHeight) * 3.14);
+        scene.rotation.x = inRange(-.3, .8, dragStartRX + (yd / window.innerHeight) * 3.14);
         scene.rotation.y = dragStartRY + (xd / window.innerWidth) * 3.14;
     }
 

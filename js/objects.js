@@ -72,7 +72,7 @@ export const objF = {
     plat: (h = 8) => makeCO(
         new THREE.MeshStandardMaterial({
             map: textures.frame,
-            color: "#FF0",
+            color: "#FF5",
             side: THREE.DoubleSide,
             metalness: 0,
             roughness: 0.1
