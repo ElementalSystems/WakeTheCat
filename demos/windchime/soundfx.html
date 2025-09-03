@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Sound FX Demo</title>
+</head>
+
+<body>
+    Mechanical Grind
+    <button onclick="playGrind(100,5,.5)"> Low SlowT</button>
+    <button onclick="playGrind(100,15,.5)"> Low FastT</button>
+    <button onclick="playGrind(200,20,.5)">Higher Fast</button>
+    <hr />
+    Hydrolic Whoosh
+    <button onclick="playWhoosh(2,false)"> Slow</button>
+    <button onclick="playWhoosh(1.2,false)"> Med</button>
+    <button onclick="playWhoosh(.5,false)"> Fast</button>
+    <button onclick="playWhoosh(2,true)"> Slow (up)</button>
+    <button onclick="playWhoosh(1.2,true)"> Med (up)</button>
+    <button onclick="playWhoosh(.5,true)"> Fast(up)</button>
+    <hr />
+    Spin Up
+    <button onclick="playSpin(5)">Very long</button>
+    <button onclick="playSpin(2)">Slow</button>
+    <button onclick="playSpin(1)">Fast</button>
+    <hr />
+    Collide
+    <button onclick="playCollide(5)">Clang!</button>
+    <hr />
+
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        //make noiseBuffer
+        const bufferSize = 2 * audioCtx.sampleRate;
+        const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const output = noiseBuffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+            output[i] = Math.random() * 2 - 1; // white noise
+        }
+
+        function noiseS() //creates a node for white noise 
+        {
+            const noise = audioCtx.createBufferSource();
+            noise.buffer = noiseBuffer;
+            noise.loop = true;
+            return noise;
+        }
+
+        function playGrind(freq, rep, dur) {
+            // Noise source (buffered white noise)
+            const noise = noiseS()
+            const now = audioCtx.currentTime;
+            // Low-pass filter (makes it deep/rumbling)
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = "lowpass";
+            filter.frequency.value = freq;
+
+            // Distortion curve
+            function makeDistortionCurve(amount) {
+                const k = typeof amount === "number" ? amount : 50;
+                const n_samples = 44100;
+                const curve = new Float32Array(n_samples);
+                const deg = Math.PI / 180;
+                for (let i = 0; i < n_samples; ++i) {
+                    const x = (i * 2) / n_samples - 1;
+                    curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+                }
+                return curve;
+            }
+            const distortion = audioCtx.createWaveShaper();
+            distortion.curve = makeDistortionCurve(200);
+            distortion.oversample = "4x";
+
+            // Modulation: LFO to move filter cutoff for "scraping" feel
+            const lfo = audioCtx.createOscillator();
+            lfo.frequency.value = rep; // Hz, experiment 5–20
+            const lfoGain = audioCtx.createGain();
+            lfoGain.gain.value = 50; // filter modulation depth
+            lfo.connect(lfoGain).connect(filter.frequency);
+            lfo.start();
+
+            // Connect chain: noise -> filter -> distortion -> destination
+            noise.connect(filter);
+            filter.connect(distortion);
+            distortion.connect(audioCtx.destination);
+
+            // Play
+            noise.start(now);
+            noise.stop(now + dur);
+            return noise;
+        }
+
+        function playWhoosh(dur, rampUp) {
+            // White noise source
+
+            const noise = noiseS();
+            const now = audioCtx.currentTime
+            // Bandpass filter (airy valve effect)
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = "bandpass";
+            filter.frequency.value = 1500; // center frequency
+            filter.Q.value = 1; // resonance
+
+            // Amplitude envelope (air blast shape)
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0, now);
+            gain.gain.linearRampToValueAtTime(1, now + dur * (rampUp ? .5 : 0.05)); // fast attack
+            gain.gain.exponentialRampToValueAtTime(0.001, now + dur); // decay
+
+
+            // Connections
+            noise.connect(filter).connect(gain).connect(audioCtx.destination);
+
+            // Start
+            noise.start();
+            noise.stop(now + dur);
+
+        }
+
+        function playSpin(dur) {
+            const now = audioCtx.currentTime;
+
+            // Base oscillator (engine/flywheel tone)
+            const osc = audioCtx.createOscillator();
+            osc.type = "triangle";
+            osc.frequency.setValueAtTime(100, now); // starting pitch
+            osc.frequency.exponentialRampToValueAtTime(300, now + dur * .4); // spin-up to high pitch
+            osc.frequency.setValueAtTime(300, now + dur * .6); // starting pitch
+            osc.frequency.exponentialRampToValueAtTime(100, now + dur); // spin-up to high pitch
+
+            const noise = noiseS();
+
+            const noiseFilter = audioCtx.createBiquadFilter();
+            noiseFilter.type = "highpass";
+            noiseFilter.frequency.value = 400; // airy whirr
+
+            // Gain envelope (fade-in and sustain)
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(0.2, now + dur * .4); // fade in
+            gain.gain.setValueAtTime(0.2, now + dur * .6);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + dur); // fade out
+
+            // Connect chain
+            osc.connect(gain);
+            noise.connect(noiseFilter).connect(gain);
+            gain.connect(audioCtx.destination);
+
+            // Start/stop
+            osc.start(now);
+            noise.start(now);
+            osc.stop(now + dur);
+            noise.stop(now + dur);
+        }
+
+        function playCollide() {
+            const now = audioCtx.currentTime;
+
+            const noise = noiseS();
+
+            const noiseGain = audioCtx.createGain();
+            noiseGain.gain.setValueAtTime(0.4, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+
+            noise.connect(noiseGain).connect(audioCtx.destination);
+            noise.start(now);
+            noise.stop(now + 0.3);
+        }
+
+    </script>
+</body>
+
+</html>
