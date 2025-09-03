@@ -4,7 +4,8 @@
   "description": "A JS13kgames 2025 WEBVR three.js Entry",
   "main": "index.js",
   "scripts": {
-    "serve": "live-server . --host=localhost --port=8080"
+    "serve": "live-server . --host=localhost --port=8080",
+    "compress": "terser js/levels.js -o dist/js/levels.js --compress --mangle --module&&terser js/main.js -o dist/js/main.js --compress --mangle --module&&terser js/mouse.js -o dist/js/mouse.js --compress --mangle --module&&terser js/objects.js -o dist/js/objects.js --compress --mangle --module&&terser js/textures.js -o dist/js/textures.js --compress --mangle --module&&terser js/util.js -o dist/js/util.js --compress --mangle --module&&terser js/world.js -o dist/js/world.js --compress --mangle --module&&cd dist&&bestzip ../release/final.zip *"
   },
   "repository": {
     "type": "git",
@@ -18,7 +19,9 @@
   },
   "homepage": "https://github.com/ElementalSystems/WakeTheCat#readme",
   "devDependencies": {
+    "bestzip": "^2.2.1",
     "http-server": "^14.1.1",
-    "live-server": "^1.2.2"
+    "live-server": "^1.2.2",
+    "terser": "^5.44.0"
   }
 }
