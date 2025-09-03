@@ -25,7 +25,8 @@
     <button onclick="playSpin(1)">Fast</button>
     <hr />
     Collide
-    <button onclick="playCollide(5)">Clang!</button>
+    <button onclick="playCollide(1)">Long</button>
+    <button onclick="playCollide(.5)">Collision</button>
     <hr />
 
 
@@ -154,18 +155,18 @@
             noise.stop(now + dur);
         }
 
-        function playCollide() {
+        function playCollide(dur) {
             const now = audioCtx.currentTime;
 
             const noise = noiseS();
 
             const noiseGain = audioCtx.createGain();
             noiseGain.gain.setValueAtTime(0.4, now);
-            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + 0.3);
+            noiseGain.gain.exponentialRampToValueAtTime(0.001, now + dur);
 
             noise.connect(noiseGain).connect(audioCtx.destination);
             noise.start(now);
-            noise.stop(now + 0.3);
+            noise.stop(now + dur);
         }
 
     </script>
