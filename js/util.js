@@ -13,6 +13,15 @@ function unsetElementClass(e, cls) {
 
 export const ranR = (s, e) => s + Math.random() * (e - s);
 
+var _onFrameList = [];
+export const onFrame = (f) => _onFrameList.push(f)
+
+export const frame = (t) => {
+    const ofl = _onFrameList;
+    _onFrameList = [];
+    ofl.forEach(f => f(t));
+}
+
 //a general animation or slow effect utility
 export function callEachFrame(time, each, end) {
     var startTime = 0;
@@ -27,13 +36,13 @@ export function callEachFrame(time, each, end) {
         if (r > 1) r = 1;
         each(r);
         if (r < 1)
-            window.requestAnimationFrame(func);
+            onFrame(func);
         else {
             if (end) end();
         }
     };
     //call it the first time
-    window.requestAnimationFrame(func);
+    onFrame(func);
 }
 
 export function inRange(s, e, v) {

@@ -1,9 +1,8 @@
 import * as THREE from 'three';
 import { textures } from './textures.js';
 import { initMouse } from './mouse.js';
-import { objF } from './objects.js';
 import { levF } from './levels.js'
-import { callEachFrame, siso, inter, si, so } from './util.js';
+import { callEachFrame, siso, inter, si, so, frame } from './util.js';
 
 
 function makeLevel(pcs) {
@@ -112,7 +111,6 @@ export function makeWorld() {
     camera.position.set(0, 15, 30);
     camera.lookAt(0, 0, 0); // Look at the origin
 
-
     // The world plane
     const planeGeometry = new THREE.PlaneGeometry(500, 500);
     const planeMaterial = new THREE.MeshStandardMaterial({
@@ -125,16 +123,16 @@ export function makeWorld() {
     plane.rotation.x = -Math.PI / 2; // make it horizontal
     scene.add(plane);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.2); // soft global light
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft global light
     scene.add(ambientLight);
 
     const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(10, 50, 5);
+    directionalLight.position.set(25, 35, 5);
     directionalLight.castShadow = true; // enable shadows
     directionalLight.shadow.mapSize.width = 2048;
     directionalLight.shadow.mapSize.height = 2048;
     directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 1000;
+    directionalLight.shadow.camera.far = 100;
     directionalLight.shadow.camera.left = -100;
     directionalLight.shadow.camera.right = 100;
     directionalLight.shadow.camera.top = 100;
@@ -145,11 +143,12 @@ export function makeWorld() {
 
 
     // Render Loop
-    function animate() {
-        requestAnimationFrame(animate);
+    function animate(t) {
+        frame(t);
         renderer.render(scene, camera);
     }
-    animate();
+    renderer.setAnimationLoop(animate);
+
 
     // Handle resize
     window.addEventListener('resize', () => {
@@ -160,25 +159,30 @@ export function makeWorld() {
     var level = null;
 
     function startLevel(lev) {
-        if (level) { //dispose of old level
-            var oldL = level;
+        const levIn = () => {
+            level = lev;
+            level.node.position.set(1000, 1000, 1000)
+            scene.add(lev.node);
             callEachFrame(1000, (r) => {
-                oldL.node.position.set(0, inter(r, 20, 0, si), 0);
-            }, () => {
-                scene.remove(oldL.node)
-                freeLevel(oldL);
+                lev.node.position.set(0, inter(r, 40, 0, so), 0);
             });
-
         }
-        level = lev;
-        scene.add(lev.node);
-        callEachFrame(1000, (r) => {
-            lev.node.position.set(0, inter(r, 20, 0, so), 0);
-        });
+
+        if (level) { //dispose of old level
+            callEachFrame(1000, (r) => {
+                level.node.position.set(0, inter(r, 0, 40, so), 0);
+            }, () => {
+                scene.remove(level.node)
+                freeLevel(level);
+                levIn();
+            });
+        } else levIn();
 
 
     }
 
+    //startLevel(makeLevel(levF[5]()));
+    //startLevel(makeLevel(levF.test()));
     startLevel(makeLevel(levF.start()));
 
 
@@ -211,6 +215,11 @@ export function makeWorld() {
                 () => {
                     if (out == 10) {  //we won!
                         console.log("MEEEOW!");
+                        startLevel(makeLevel(levF.start()));
+                    }
+                    if ((out >= 100) && (out < 200)) {
+                        console.log("Start Level ", out);
+                        startLevel(makeLevel(levF[out - 100]()));
                     }
                     p.st = ns; //sets the new state
                     if (p.node.wrapState && (ns == sts.length - 1)) {// the last one needs to wrap

@@ -19,7 +19,7 @@ function ringMesh(r, ir, h) {
     shape.holes.push(holePath);
 
     return new THREE.ExtrudeGeometry(shape, {
-        depth: h,        // extrusion depth (along +Z by default)
+        depth: h,        // extrusion depth
         steps: 3,                // low steps -> vertical sides
         curveSegments: 32,
         bevelEnabled: true,
@@ -29,7 +29,7 @@ function ringMesh(r, ir, h) {
     });
 }
 
-function makeCO(mat, objs, sts = [], add = {}) {
+function makeCO(mat, objs, sts = [{}], add = {}) {
     const group = new THREE.Group();
     const bits = [group];
     objs.forEach((geo, i) => {
@@ -41,11 +41,11 @@ function makeCO(mat, objs, sts = [], add = {}) {
     });
     const controller = new THREE.Object3D();
     //map out all the states explicitly and add a zero state
-    controller.sts = [{}, ...sts].map(cStates);
+    controller.sts = [...sts].map(cStates);
     //map out substates for every bit
     controller.bits = bits.map((b, i) => ({
         node: b,
-        sts: getSubstates(i, [{}, ...sts]),
+        sts: getSubstates(i, sts),
     }));
     Object.assign(controller, add);
     controller.add(group);
@@ -112,6 +112,7 @@ export const objF = {
             new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, l / 2 + .5, 0),
         ],
         [
+            {},
             { y: -(l + 1), sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
         ]
     ),
@@ -139,6 +140,7 @@ export const objF = {
                 new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
             ],
             [
+                {},
                 { y: 3, sub: { 1: { y: -3 }, } },
                 { y: 6, sub: { 1: { y: -6 }, 2: { y: -3, }, } }
             ],
@@ -160,6 +162,7 @@ export const objF = {
             new THREE.CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(-3.14 * 2 / 3),
         ],
         [
+            {},
             { ry: 3.14 / 2 },
             { ry: 3.14 },
             { ry: 3.14 * 3 / 2 },
