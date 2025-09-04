@@ -37,6 +37,35 @@ function makeLevel(pcs) {
     }
 }
 
+function freeLevel(lev) {
+    function remove(obj) {
+        if (!obj) return;
+
+        // Recursively dispose children
+        while (obj.children.length > 0) {
+            remove(obj.children[0]);
+        }
+
+        if (obj.parent) //disconnect from parent 
+            obj.parent.remove(obj);
+
+        if (obj.geometry) //free geometry
+            obj.geometry.dispose();
+
+
+        if (obj.material) { //free materials
+            for (const key in obj.material) {
+                const value = obj.material[key];
+                if (value && value.isTexture) {
+                    value.dispose();
+                }
+            }
+            obj.material.dispose();
+        }
+    }
+    remove(lev.node);
+}
+
 
 
 const setNode = (node, os, ns, sr, er, ipf, r) => {
@@ -61,6 +90,7 @@ const moveP = (p, dur, os, ns, sr, er, ipf, after) => {
         });
     }, after);
 }
+
 
 
 export function makeWorld() {
@@ -127,9 +157,29 @@ export function makeWorld() {
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
+    var level = null;
 
-    var lev = makeLevel(levF.l3());
-    scene.add(lev.node);
+    function startLevel(lev) {
+        if (level) { //dispose of old level
+            var oldL = level;
+            callEachFrame(1000, (r) => {
+                oldL.node.position.set(0, inter(r, 20, 0, si), 0);
+            }, () => {
+                scene.remove(oldL.node)
+                freeLevel(oldL);
+            });
+
+        }
+        level = lev;
+        scene.add(lev.node);
+        callEachFrame(1000, (r) => {
+            lev.node.position.set(0, inter(r, 20, 0, so), 0);
+        });
+
+
+    }
+
+    startLevel(makeLevel(levF.start()));
 
 
     const movePiece = (p) => {
@@ -141,7 +191,7 @@ export function makeWorld() {
         var out = p.rls
             .filter(v => v.st === ns) //only the rules for the new state
             .reduce((acc, rl) =>
-                (rl.con.every(c => ((Array.isArray(c.st) ? c.st : [c.st]).includes(lev.pieces[c.o].st))) ? ((acc < rl.res) ? acc : rl.res) : acc) //all conditions met 
+                (rl.con.every(c => ((Array.isArray(c.st) ? c.st : [c.st]).includes(level.pieces[c.o].st))) ? ((acc < rl.res) ? acc : rl.res) : acc) //all conditions met 
                 , 10000);
         var dur = 500;
         if (out < 1) { //this ain't happening
@@ -175,7 +225,7 @@ export function makeWorld() {
 
 
     initMouse(scene, camera, (el, name) => {
-        movePiece(lev.pieces[name]);
+        movePiece(level.pieces[name]);
     });
 
 }

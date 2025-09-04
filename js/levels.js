@@ -4,6 +4,14 @@ import { objF } from './objects.js';
 
 
 export const levF = {
+    start: () => [
+        { n: 'n1', g: objF.needle(5), p: { x: 0, y: 5 }, },
+        { n: 'p1', g: objF.plat(), p: { x: 0, z: 12, y: 5 } },
+        { n: 's1', g: objF.sign("1. Snowy", "sweet kitten", "will teach", "you the game"), p: { parent: 'p1', y: -3, z: -4 } },
+        { n: 'cat2', g: objF.cat(null, "#FFE", "#48F"), p: { parent: 'p1', y: 1 } },
+
+
+    ],
     test: () => [
         {
             n: 'n1', g: objF.needle(), p: { x: 10, y: 16 },
@@ -119,17 +127,6 @@ export const levF = {
             ]
         },
 
-    ],
-    l3x: () => [
-        { n: 'w1', g: objF.wheel(), p: { y: 2 } },
-        { n: 's1', g: objF.plat(16), p: { parent: 'w1', y: 5, add: { passDown: true } } },
-        { n: 's2', g: objF.plat(12), p: { parent: 'w1', y: 9, x: 4, z: 4, add: { passDown: true } } },
-        { n: 's3', g: objF.plat(12), p: { parent: 'w1', y: 9, x: -4, z: -4, add: { passDown: true } } },
-        { n: 'cat', g: objF.cat(textures.tabby(), "#FA0", "#0F0"), p: { parent: 's1', y: 1, x: 2, ry: 3 } },
-
-        { n: 'n1', g: objF.needle(), p: { x: -7, y: 18, z: -3, is: 1 } },
-
-        { n: 'w2', g: objF.wheel(), p: { parent: 'n1', y: 3, ry: 3.14 / 8 } },
     ],
 
     l4: () => [

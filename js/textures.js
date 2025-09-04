@@ -41,7 +41,7 @@ function makeCanvasTexture(drawFunc, bg = 0, repeat = 1, mirror = true) {
 }
 
 export const textures = {
-    squares: makeCanvasTexture((ctx) => {
+    squares: () => makeCanvasTexture((ctx) => {
         ctx.fillStyle = '#ff0000';
         ctx.fillRect(0, 0, 256, 256);
         ctx.fillStyle = '#AA0000';
@@ -51,17 +51,17 @@ export const textures = {
         ctx.fillStyle = '#330000';
         ctx.fillRect(256, 256, 256, 256);
     }, 0, 100),
-    frame: makeCanvasTexture((ctx) => {
+    frame: () => makeCanvasTexture((ctx) => {
         ctx.fillStyle = '#000088';
         ctx.fillRect(20, 20, 512 - 40, 512 - 40);
     }, '#2222FF', 10),
-    fur: makeCanvasTexture((ctx) => {
+    fur: () => makeCanvasTexture((ctx) => {
         for (let y = 0; y < 500; y += ranR(40, 80))
             for (let x = 0; x < 512; x += ranR(1, 5)) {
                 ctx.line(x, y + ranR(-20, 20), x + ranR(-15, 15), y + ranR(50, 120), "#FFF4", ranR(1, 5));
             }
     }, '#000', 1),
-    eye: makeCanvasTexture(
+    eye: () => makeCanvasTexture(
         (ctx) => {
             ctx.fillStyle = "#000"
             ctx.ellipse(256, 256, 30, 160, 0, 0, 314 * 2);
@@ -92,7 +92,7 @@ export const textures = {
             }
         }, "#fff", rep, true
     ),
-    diag: makeCanvasTexture((ctx) => {
+    diag: () => makeCanvasTexture((ctx) => {
         ctx.lineR(-100, 156, 356, 612, "#0008", 100, 4);
         ctx.lineR(156, -100, 612, 356, "#0008", 100, 4);
     }, "#FFF", 5, false),

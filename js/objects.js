@@ -56,7 +56,7 @@ function makeCO(mat, objs, sts = [], add = {}) {
 export const objF = {
     basket: () => makeCO(
         new THREE.MeshStandardMaterial({
-            map: textures.frame,
+            map: textures.frame(),
             side: THREE.DoubleSide,
             metalness: 0,
             roughness: 0.1
@@ -71,7 +71,7 @@ export const objF = {
     ),
     plat: (h = 8) => makeCO(
         new THREE.MeshStandardMaterial({
-            map: textures.frame,
+            map: textures.frame(),
             color: "#FF5",
             side: THREE.DoubleSide,
             metalness: 0,
@@ -101,7 +101,7 @@ export const objF = {
     needle: (l = 6) => makeCO(
         new THREE.MeshStandardMaterial({
             color: "#BB8",
-            bumpMap: textures.diag,
+            bumpMap: textures.diag(),
             bumpScale: 1,
             metalness: 0,
             roughness: 0.3
@@ -117,13 +117,13 @@ export const objF = {
     ),
     press: () => {
         var main = new THREE.MeshStandardMaterial({
-            map: textures.frame,
+            map: textures.frame(),
             flatShading: true,
             metalness: 0,
             roughness: 0.5
         });
         var silver = new THREE.MeshStandardMaterial({
-            bumpMap: textures.frame,
+            bumpMap: textures.frame(),
             bumpScale: 5,
             color: "#FFD",
             metalness: 0.7,
@@ -197,7 +197,7 @@ export const objF = {
     cat: (coat, ccol = "#000", ecol = "#FF0") => {
         let eyeM =
             new THREE.MeshStandardMaterial({
-                map: textures.eye,
+                map: textures.eye(),
                 color: ecol,
             });
         return makeCO(
@@ -205,7 +205,7 @@ export const objF = {
                 color: ccol,
                 map: coat,
                 metalness: 0,
-                bumpMap: textures.fur,
+                bumpMap: textures.fur(),
                 bumpScale: 2,
                 side: THREE.DoubleSide,
                 roughness: .7,
