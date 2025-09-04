@@ -98,7 +98,7 @@ export const objF = {
         ],
     ),
 
-    needle: () => makeCO(
+    needle: (l = 6) => makeCO(
         new THREE.MeshStandardMaterial({
             color: "#BB8",
             bumpMap: textures.diag,
@@ -107,12 +107,12 @@ export const objF = {
             roughness: 0.3
         }),
         [
-            new THREE.CylinderGeometry(.25, .25, 6, 25),
-            new THREE.CylinderGeometry(.25, .01, 3, 25).translate(0, -4.5, 0),
-            new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, 3.5, 0),
+            new THREE.CylinderGeometry(.25, .25, l, 25),
+            new THREE.CylinderGeometry(.25, .01, 3, 25).translate(0, -l / 2 - 1.5, 0),
+            new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, l / 2 + .5, 0),
         ],
         [
-            { y: -7, sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
+            { y: -(l + 1), sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
         ]
     ),
     press: () => {

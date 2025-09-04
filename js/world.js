@@ -128,7 +128,7 @@ export function makeWorld() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
 
-    var lev = makeLevel(levF.l5());
+    var lev = makeLevel(levF.l3());
     scene.add(lev.node);
 
 
@@ -143,10 +143,10 @@ export function makeWorld() {
             .reduce((acc, rl) =>
                 (rl.con.every(c => ((Array.isArray(c.st) ? c.st : [c.st]).includes(lev.pieces[c.o].st))) ? ((acc < rl.res) ? acc : rl.res) : acc) //all conditions met 
                 , 10000);
-        var dur = 2000;
+        var dur = 500;
         if (out < 1) { //this ain't happening
             //got some way forward in some of the time
-            moveP(p, dur * out, os, ns, 0, out, si,
+            moveP(p, dur * out * 4, os, ns, 0, out, si,
                 () => {
                     //TODO:  Play the crash sound
                     setTimeout(() => {

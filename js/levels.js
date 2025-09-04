@@ -68,6 +68,59 @@ export const levF = {
 
     ],
     l3: () => [
+        { n: 's1', g: objF.plat(16), p: { y: 5.5 } },
+        { n: 'cat', g: objF.cat(textures.tabby(), "#FA0", "#0F0"), p: { parent: 's1', y: 1, x: 2, ry: -1 } },
+        {
+            n: 'n1', g: objF.needle(10), p: { x: 22, y: 7, rz: -3.14 / 2 },
+            r: [
+                { st: 1, con: [{ o: 'w3', st: 0 }], res: .25 },
+                { st: 1, con: [{ o: 'w2', st: 0 }], res: .5 },
+                { st: 1, con: [{ o: 'w1', st: 0 }], res: .75 },
+                { st: 1, con: [{ o: 'w1', st: 1 }], res: 10 },
+
+            ]
+        },
+        {
+            n: 'w1', g: objF.wheel(), p: { x: 6, y: 10, rz: 3.14 / 2, rx: - 3.14 / 6 },
+            r: [
+                { st: 1, con: [{ o: 'n3', st: 0 }], res: .25 },
+                { st: 1, con: [{ o: 'n2', st: 1 }], res: .08 },
+                { st: 1, con: [{ o: 'n4', st: 1 }], res: .9 },
+                { st: 3, con: [{ o: 'n4', st: 1 }], res: .3 },
+                { st: 4, con: [{ o: 'n4', st: 1 }], res: .6 },
+            ]
+
+        },
+        {
+            n: 'w2', g: objF.wheel(), p: { x: 9, y: 10, rz: -3.14 / 2, rx: - 3.14 / 6 },
+            r: [
+                { st: 1, con: [{ o: 'n4', st: 1 }], res: .25 },
+                { st: 2, con: [{ o: 'n4', st: 1 }], res: .55 },
+                { st: 3, con: [{ o: 'n4', st: 1 }], res: .9 },
+                { st: 4, con: [{ o: 'n2', st: [0, 1] }], res: .7 },
+            ]
+
+        },
+        {
+            n: 'w3', g: objF.wheel(), p: { x: 12, y: 10, rz: 3.14 / 2, rx: -3.14 / 6 },
+            r: [
+                { st: 1, con: [{ o: 'n2', st: 0 }], res: .08 },
+                { st: 1, con: [{ o: 'n3', st: 1 }], res: .25 },
+
+            ]
+        },
+        { n: 'n2', g: objF.needle(2), p: { x: 11.5, y: 15, z: 6, rz: -3.14 / 2 } },
+        { n: 'n3', g: objF.needle(2), p: { x: 6, y: 17, z: 5, rz: 3.14 / 2 } },
+        {
+            n: 'n4', g: objF.needle(6), p: { x: -1.5, y: 10, z: 3, rz: 3.14 / 2, is: 1 },
+            r: [
+                { st: 1, con: [{ o: 'w1', st: 1 }], res: .1 },
+                { st: 1, con: [{ o: 'w2', st: 3 }], res: .55 },
+            ]
+        },
+
+    ],
+    l3x: () => [
         { n: 'w1', g: objF.wheel(), p: { y: 2 } },
         { n: 's1', g: objF.plat(16), p: { parent: 'w1', y: 5, add: { passDown: true } } },
         { n: 's2', g: objF.plat(12), p: { parent: 'w1', y: 9, x: 4, z: 4, add: { passDown: true } } },
