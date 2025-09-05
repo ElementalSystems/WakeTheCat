@@ -5,8 +5,7 @@
   "main": "index.js",
   "scripts": {
     "serve": "live-server . --host=localhost --port=8080",
-    "serveP": "live-server . --host=0.0.0.0 --port=8080",
-    "compress": "terser js/levels.js -o dist/js/levels.js --compress --mangle --module&&terser js/main.js -o dist/js/main.js --compress --mangle --module&&terser js/mouse.js -o dist/js/mouse.js --compress --mangle --module&&terser js/objects.js -o dist/js/objects.js --compress --mangle --module&&terser js/textures.js -o dist/js/textures.js --compress --mangle --module&&terser js/util.js -o dist/js/util.js --compress --mangle --module&&terser js/world.js -o dist/js/world.js --compress --mangle --module&&cd dist&&bestzip ../release/final.zip *"
+    "compress": "terser js/levels.js -o dist/js/levels.js --compress --mangle --module&&terser js/main.js -o dist/js/main.js --compress --mangle --module&&terser js/mouse.js -o dist/js/mouse.js --compress --mangle --module&&terser js/objects.js -o dist/js/objects.js --compress --mangle --module&&terser js/textures.js -o dist/js/textures.js --compress --mangle --module&&terser js/util.js -o dist/js/util.js --compress --mangle --module&&terser js/world.js -o dist/js/world.js --compress --mangle --module&&terser js/vr.js -o dist/js/vr.js --compress --mangle --module&&cd dist&&bestzip ../release/final.zip *"
   },
   "repository": {
     "type": "git",
