@@ -16,6 +16,7 @@ export function initMouse(scene, camera, clickFunction) {
 
 
     function touchDown(evt) {
+        evt.preventDefault();
         uniDown(evt.touches[0].clientX, evt.touches[0].clientY);
     }
 
@@ -37,6 +38,7 @@ export function initMouse(scene, camera, clickFunction) {
     }
 
     function touchUp(evt) {
+        evt.preventDefault();
         uniUp(evt.changedTouches[0].clientX, evt.changedTouches[0].clientY);
     }
 
@@ -59,6 +61,7 @@ export function initMouse(scene, camera, clickFunction) {
     }
 
     function touchMove(evt) {
+        evt.preventDefault();
         uniMove(evt.touches[0].clientX, evt.touches[0].clientY);
     }
 
@@ -79,14 +82,14 @@ export function initMouse(scene, camera, clickFunction) {
             if (hitEl.name && (!hitEl?.passDown)) break; //we found something with a name that isn't marked click it's parent 
             hitEl = hitEl.parent;
         }
-        clickFunction(hitEl, hitEl?.name);
+        if (hitEl) clickFunction(hitEl, hitEl?.name);
     }
 
     document.addEventListener('mousemove', mouseMove, false);
     document.addEventListener('mousedown', mouseDown, false);
     document.addEventListener('mouseup', mouseUp, false);
-    document.addEventListener('touchstart', touchDown, false);
-    document.addEventListener('touchmove', touchMove, false);
-    document.addEventListener('touchend', touchUp, false);
+    document.addEventListener('touchstart', touchDown, { passive: false });
+    document.addEventListener('touchmove', touchMove, { passive: false });
+    document.addEventListener('touchend', touchUp, { passive: false });
 
 }

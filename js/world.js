@@ -3,7 +3,7 @@ import { textures } from './textures.js';
 import { initMouse } from './mouse.js';
 import { levF } from './levels.js'
 import { callEachFrame, siso, inter, si, so, frame } from './util.js';
-
+import { initVR } from './vr.js'
 
 function makeLevel(pcs) {
     const puzzle = new THREE.Object3D();
@@ -102,26 +102,30 @@ export function makeWorld() {
 
     document.body.appendChild(renderer.domElement);
 
-    const scene = new THREE.Scene(); //root node to control the full image
-
+    const sceneBase = new THREE.Scene(); //root node to control the full image
+    const scene = new THREE.Group();
+    sceneBase.add(scene);
     // Camera
     const camera = new THREE.PerspectiveCamera(
         75, window.innerWidth / window.innerHeight, 0.1, 1000
     );
-    camera.position.set(0, 15, 30);
-    camera.lookAt(0, 0, 0); // Look at the origin
+    const cameraRig = new THREE.Group();
+    cameraRig.position.set(0, 3, 30);
+    cameraRig.add(camera);
+    sceneBase.add(cameraRig);
+    camera.lookAt(0, 3, 0); // Look at the origin
 
     // The world plane
-    const planeGeometry = new THREE.PlaneGeometry(500, 500);
     const planeMaterial = new THREE.MeshStandardMaterial({
         map: textures.pitted(4, 50),
         color: "#800"
 
     });
-    const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), planeMaterial);
     plane.receiveShadow = true; // plane will receive shadows
     plane.rotation.x = -Math.PI / 2; // make it horizontal
     scene.add(plane);
+
 
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft global light
     scene.add(ambientLight);
@@ -145,7 +149,7 @@ export function makeWorld() {
     // Render Loop
     function animate(t) {
         frame(t);
-        renderer.render(scene, camera);
+        renderer.render(sceneBase, camera);
     }
     renderer.setAnimationLoop(animate);
 
@@ -236,5 +240,7 @@ export function makeWorld() {
     initMouse(scene, camera, (el, name) => {
         movePiece(level.pieces[name]);
     });
+
+    initVR(renderer, scene, camera);
 
 }

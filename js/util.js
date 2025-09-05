@@ -14,12 +14,16 @@ function unsetElementClass(e, cls) {
 export const ranR = (s, e) => s + Math.random() * (e - s);
 
 var _onFrameList = [];
+var _lastFrameT = 0;
 export const onFrame = (f) => _onFrameList.push(f)
 
 export const frame = (t) => {
+    if (!_lastFrameT) _lastFrameT = t - 10;
+    const ft = t - _lastFrameT;
+    _lastFrameT = t;
     const ofl = _onFrameList;
     _onFrameList = [];
-    ofl.forEach(f => f(t));
+    ofl.forEach(f => f(t, ft));
 }
 
 //a general animation or slow effect utility
