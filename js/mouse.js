@@ -85,11 +85,14 @@ export function initMouse(scene, camera, clickFunction) {
         if (hitEl) clickFunction(hitEl, hitEl?.name);
     }
 
-    document.addEventListener('mousemove', mouseMove, false);
-    document.addEventListener('mousedown', mouseDown, false);
-    document.addEventListener('mouseup', mouseUp, false);
-    document.addEventListener('touchstart', touchDown, { passive: false });
-    document.addEventListener('touchmove', touchMove, { passive: false });
-    document.addEventListener('touchend', touchUp, { passive: false });
+
+    let canvas = document.getElementsByTagName("canvas")[0];
+    console.log("Canvas:", canvas);
+    canvas.addEventListener('mousemove', mouseMove, false);
+    canvas.addEventListener('mousedown', mouseDown, false);
+    canvas.addEventListener('mouseup', mouseUp, false);
+    canvas.addEventListener('touchstart', touchDown, { passive: false });
+    canvas.addEventListener('touchmove', touchMove, { passive: false });
+    canvas.addEventListener('touchend', touchUp, { passive: false });
 
 }

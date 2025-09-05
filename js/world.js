@@ -113,6 +113,7 @@ export function makeWorld() {
     cameraRig.position.set(0, 3, 30);
     cameraRig.add(camera);
     sceneBase.add(cameraRig);
+    camera.position.set(0, 1.7, 0);
     camera.lookAt(0, 3, 0); // Look at the origin
 
     // The world plane

@@ -47,7 +47,6 @@ export function initVR(renderer, scene, camera) {
     }
 
     const endSession = () => {
-
         point.visible = false;
         point2.visible = false;
         console.log("session Ended");
@@ -68,6 +67,7 @@ export function initVR(renderer, scene, camera) {
 
 
     const sessionFrame = (t, ft) => {
+        if (!session) return; // we're done
         //do the ray casting
         raycaster.setFromCamera({ x: 0, y: 0 }, camera);
         var results = raycaster.intersectObject(scene, true);
@@ -95,12 +95,7 @@ export function initVR(renderer, scene, camera) {
             point2.visible = false
             _pointO = null;
         }
-
-
-
-
-
-        if (session) onFrame(sessionFrame); //call next frame
+        onFrame(sessionFrame); //call next frame
     }
 
     if (!('xr' in navigator)) {
