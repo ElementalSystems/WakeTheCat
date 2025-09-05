@@ -10,6 +10,7 @@ function makeCanvasTexture(drawFunc, bg = 0, repeat = 1, mirror = true) {
     ctx.fillRect(0, 0, 512, 512);
     ctx.line = (x1, y1, x2, y2, c, w) => {
         ctx.beginPath();
+        ctx.lineCap = 'round';
         ctx.moveTo(x1, y1);
         ctx.lineTo(x2, y2);
         ctx.strokeStyle = c;
@@ -91,6 +92,14 @@ export const textures = {
                 ctx.ellR(ranR(0, 512), ranR(0, 512), ranR(30, 100), ranR(30, 100), "#0004", 4);
             }
         }, "#fff", rep, true
+    ),
+    arrow: () => makeCanvasTexture(
+        (ctx) => {
+            ctx.line(256, 50, 256, 400, "#000", 50);
+            ctx.line(256, 50, 50, 200, "#000", 50);
+            ctx.line(256, 50, 512 - 50, 200, "#000", 50);
+
+        }, "#fff"
     ),
     diag: () => makeCanvasTexture((ctx) => {
         ctx.lineR(-100, 156, 356, 612, "#0008", 100, 4);

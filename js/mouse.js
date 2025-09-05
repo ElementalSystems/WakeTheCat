@@ -69,7 +69,7 @@ export function initMouse(scene, camera, clickFunction) {
         if (!dragNow) return;
         var xd = cx - dragStartX;
         var yd = cy - dragStartY;
-        scene.rotation.x = inRange(-.3, .8, dragStartRX + (yd / window.innerHeight) * 3.14);
+        scene.rotation.x = inRange(-.1, 1, dragStartRX + (yd / window.innerHeight) * 3.14);
         scene.rotation.y = dragStartRY + (xd / window.innerWidth) * 3.14;
     }
 
@@ -87,7 +87,6 @@ export function initMouse(scene, camera, clickFunction) {
 
 
     let canvas = document.getElementsByTagName("canvas")[0];
-    console.log("Canvas:", canvas);
     canvas.addEventListener('mousemove', mouseMove, false);
     canvas.addEventListener('mousedown', mouseDown, false);
     canvas.addEventListener('mouseup', mouseUp, false);

@@ -116,6 +116,7 @@ export function makeWorld() {
     camera.position.set(0, 1.7, 0);
     camera.lookAt(0, 3, 0); // Look at the origin
 
+
     // The world plane
     const planeMaterial = new THREE.MeshStandardMaterial({
         map: textures.pitted(4, 50),
@@ -242,6 +243,8 @@ export function makeWorld() {
         movePiece(level.pieces[name]);
     });
 
-    initVR(renderer, scene, camera);
+    initVR(renderer, scene, camera, (el, name) => {
+        movePiece(level.pieces[name]);
+    });
 
 }
