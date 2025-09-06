@@ -4,12 +4,10 @@ import { initMouse } from './mouse.js';
 import { levF } from './levels.js'
 import { callEachFrame, siso, inter, si, so, frame } from './util.js';
 import { initVR } from './vr.js'
-import { sFX, pChimes } from './sounds.js'
 
-function makeLevel(lev) {
+function makeLevel(pcs) {
     const puzzle = new THREE.Object3D();
     const pieces = {};
-    const pcs = lev.obj
 
     const addP = (name, ob, p, rls = []) => {
         const posNode = new THREE.Object3D();
@@ -17,7 +15,6 @@ function makeLevel(lev) {
         Object.assign(posNode, p?.add);
         posNode.position.set(p.x ?? 0, p.y ?? 0, p.z ?? 0);
         posNode.rotation.set(p.rx ?? 0, p.ry ?? 0, p.rz ?? 0);
-        ob.children[0].scale.set(p.sx ?? p.s ?? 1, p.sy ?? p.s ?? 1, p.sz ?? p.s ?? 1); //only scale actual object not controller node 
         posNode.add(ob);
 
         //figure out who to connect it to
@@ -34,10 +31,8 @@ function makeLevel(lev) {
 
     pcs.forEach(d => addP(d.n, d.g, d.p, d.r));
     return {
-        ir: lev.ir?.() || { x: lev.irx || 0, y: lev.iry || 0 }, //calculate or set or default initial view rotation
         node: puzzle,
         pieces: pieces,
-        music: lev.music,
     }
 }
 
@@ -168,26 +163,17 @@ export function makeWorld() {
         renderer.setSize(window.innerWidth, window.innerHeight);
     });
     var level = null;
-    var lMoving = false;
 
     function startLevel(lev) {
         const levIn = () => {
             level = lev;
             level.node.position.set(1000, 1000, 1000)
             scene.add(lev.node);
-            pChimes(lev.music); //play chimes if defined
             callEachFrame(1000, (r) => {
                 lev.node.position.set(0, inter(r, 40, 0, so), 0);
             });
-            //rotate the scene to the iritial angle
-            var stx = scene.rotation.x;
-            var sty = scene.rotation.y;
-            callEachFrame(1200, (r) => {
-                scene.rotation.set(inter(r, stx, level.ir.x, so), inter(r, sty, level.ir.y, so), 0)
-            }, () => { lMoving = false; })
         }
-        lMoving = true;
-        pChimes(); //silence chimes
+
         if (level) { //dispose of old level
             callEachFrame(1000, (r) => {
                 level.node.position.set(0, inter(r, 0, 40, so), 0);
@@ -202,42 +188,37 @@ export function makeWorld() {
     }
 
     //startLevel(makeLevel(levF[5]()));
-    startLevel(makeLevel(levF.test()));
-    //startLevel(makeLevel(levF.start()));
+    //startLevel(makeLevel(levF.test()));
+    startLevel(makeLevel(levF.start()));
 
 
     const movePiece = (p) => {
-        if (lMoving) return; //can't click it's in action
         let sts = p.node.sts;
         let os = p.st;
         let ns = (os + 1) % (sts.length);
-        lMoving = true;
+
         //do the rules analysis
         var out = p.rls
             .filter(v => v.st === ns) //only the rules for the new state
             .reduce((acc, rl) =>
                 (rl.con.every(c => ((Array.isArray(c.st) ? c.st : [c.st]).includes(level.pieces[c.o].st))) ? ((acc < rl.res) ? acc : rl.res) : acc) //all conditions met 
                 , 10000);
-        var dur = sts[ns].d;
+        var dur = 500;
         if (out < 1) { //this ain't happening
             //got some way forward in some of the time
-            sts[ns].snd(dur / 1000, (dur * out) / 1000);
-            moveP(p, dur * out, os, ns, 0, out, si,
+            moveP(p, dur * out * 4, os, ns, 0, out, si,
                 () => {
-                    sFX.bash(.5, 1);
+                    //TODO:  Play the crash sound
                     setTimeout(() => {
-                        sts[os].snd(dur / 1000, (dur * out) / 1000);
                         moveP(p, dur * out, os, ns, out, 0, so,
-                            () => { lMoving = false; }
+                            () => { }
                         )
-                    }, 1000);
+                    }, 200);
                 }
             )
         } else { //complete the move
-            sts[ns].snd(dur / 1000, dur * 2 / 1000); //play the noise
             moveP(p, dur, os, ns, 0, 1, siso,
                 () => {
-                    lMoving = false;
                     if (out == 10) {  //we won!
                         console.log("MEEEOW!");
                         startLevel(makeLevel(levF.start()));

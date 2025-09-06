@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Wake the Cat</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        html,
+        body {
+            overscroll-behavior-x: none;
+            overscroll-behavior-y: none;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+    <script type="importmap"> { "imports": { "three": "https://threejs.org/build/three.module.min.js" } } </script>
+    <script type="module" src="js/main.js"></script>
+
+</head>
+
+<body>
+    <button id='vr' style="position:fixed; right:0; bottom:0; 
+           padding:1rem;
+           margin:.5rem;
+           background:#0008; color:#fff; 
+           border:none; border-radius:8px;
+           font-size:2rem; 
+           cursor:pointer;">
+        Enter VR
+    </button>
+</body>
+
+</html>

@@ -11,8 +11,7 @@ function unsetElementClass(e, cls) {
         e.classList.remove(cls);
 }
 
-export const ranR = (s, e) => s + Math.random() * (e - s); //random in range s to e smooth
-export const randA = (a) => a[Math.floor(Math.random() * a.length)]; //select a random element of array
+export const ranR = (s, e) => s + Math.random() * (e - s);
 
 var _onFrameList = [];
 var _lastFrameT = 0;

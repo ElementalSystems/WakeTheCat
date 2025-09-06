@@ -1,14 +1,8 @@
 import * as THREE from 'three';
 import { textures } from './textures.js';
-import { sFX } from './sounds.js';
 
-//Maps a partial states into full valid state
-const cStates = (v) => ({
-    x: v.x ?? 0, y: v.y ?? 0, z: v.z ?? 0,
-    rx: v.rx ?? 0, ry: v.ry ?? 0, rz: v.rz ?? 0,
-    d: v.d ?? 500, //half second duration bby default 
-    snd: v.snd ?? (() => { }), //sound effect if there is one defined
-});
+//Maps a partial states into fulkl valid state
+const cStates = (v) => ({ x: v.x ?? 0, y: v.y ?? 0, z: v.z ?? 0, rx: v.rx ?? 0, ry: v.ry ?? 0, rz: v.rz ?? 0 });
 
 function getSubstates(i, sts) {
     if (!sts.some(s => s.sub && s.sub[i])) return null; //if the bit has no substate forget it
@@ -118,8 +112,8 @@ export const objF = {
             new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, l / 2 + .5, 0),
         ],
         [
-            { d: 1200, snd: sFX.spin },
-            { d: 800, snd: sFX.spin, y: -(l + 1), sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
+            {},
+            { y: -(l + 1), sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
         ]
     ),
     press: () => {
@@ -146,9 +140,9 @@ export const objF = {
                 new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
             ],
             [
-                { d: 800, snd: sFX.woosh },
-                { d: 1200, snd: sFX.wooshUp, y: 3, sub: { 1: { y: -3 }, } },
-                { d: 1200, snd: sFX.wooshUp, y: 6, sub: { 1: { y: -6 }, 2: { y: -3, }, } }
+                {},
+                { y: 3, sub: { 1: { y: -3 }, } },
+                { y: 6, sub: { 1: { y: -6 }, 2: { y: -3, }, } }
             ],
         )
     },
@@ -168,11 +162,11 @@ export const objF = {
             new THREE.CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(-3.14 * 2 / 3),
         ],
         [
-            { d: 1000, snd: sFX.grind, },
-            { d: 1000, snd: sFX.grind, ry: 3.14 / 2 },
-            { d: 1000, snd: sFX.grind, ry: 3.14 },
-            { d: 1000, snd: sFX.grind, ry: 3.14 * 3 / 2 },
-            { d: 1000, snd: sFX.grind, ry: 3.14 * 2 },
+            {},
+            { ry: 3.14 / 2 },
+            { ry: 3.14 },
+            { ry: 3.14 * 3 / 2 },
+            { ry: 3.14 * 2 },
         ],
         {
             wrapState: true,
