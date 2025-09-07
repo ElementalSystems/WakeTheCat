@@ -19,18 +19,18 @@ function makeCanvasTexture(drawFunc, bg = 0, repeat = 1, mirror = true) {
     }
     ctx.lineR = (x1, y1, x2, y2, c, w, r) => {
         for (var i = 0; i < r; i += 1)
-            ctx.line(x1, y1, x2, y2, c, w / Math.pow(2, i));
+            ctx.line(x1, y1, x2, y2, c, w / Math.pow(1.5, i));
     }
     ctx.ell = (x, y, rx, ry, c) => {
         ctx.beginPath();
         ctx.fillStyle = c;
         ctx.ellipse(x, y, rx, ry, 0, 0, 3.14 * 2);
         ctx.fill();
-    },
-        ctx.ellR = (x, y, rx, ry, c, r) => {
-            for (var i = 0; i < r; i += 1)
-                ctx.ell(x, y, rx / Math.pow(2, i), ry / Math.pow(2, i), c)
-        }
+    }
+    ctx.ellR = (x, y, rx, ry, c, r) => {
+        for (var i = 0; i < r; i += 1)
+            ctx.ell(x, y, rx / Math.pow(1.5, i), ry / Math.pow(1.5, i), c)
+    }
 
     drawFunc(ctx);
 
@@ -52,6 +52,20 @@ export const textures = {
         ctx.fillStyle = '#330000';
         ctx.fillRect(256, 256, 256, 256);
     }, 0, 100),
+    lines: (rep = 5) => makeCanvasTexture((ctx) => {
+        ctx.lineR(0, 256, 512, 256, "#0004", 100, 8)
+    }, "#FFF", rep),
+    dimple: (rep = 5) => makeCanvasTexture((ctx) => {
+        ctx.ellR(256, 256, 128, 128, "#0004", 8)
+    }, "#FFF", rep),
+    weave: (rep = 5) => makeCanvasTexture((ctx) => {
+        ctx.lineR(0, 128, 512, 128, "#FFFFFF05", 200, 5);
+        ctx.lineR(128, 0, 128, 512, "#FFFFFF05", 200, 5);
+        ctx.lineR(0, 256 + 128, 512, 256 + 128, "#FFFFFF05", 200, 5);
+        ctx.lineR(256 + 128, 0, 256 + 128, 512, "#FFFFFF05", 200, 5);
+
+    }, "#000", rep, true),
+
     frame: () => makeCanvasTexture((ctx) => {
         ctx.fillStyle = '#000088';
         ctx.fillRect(20, 20, 512 - 40, 512 - 40);
@@ -62,6 +76,13 @@ export const textures = {
                 ctx.line(x, y + ranR(-20, 20), x + ranR(-15, 15), y + ranR(50, 120), "#FFF4", ranR(1, 5));
             }
     }, '#000', 1),
+    wood: (rep = 5) => makeCanvasTexture((ctx) => {
+        for (let i = 0; i < 500; i += 1) {
+            var x = ranR(-200, 712);
+            var y = ranR(0, 512);
+            ctx.line(x, y, x + ranR(50, 300), y, "#0004", ranR(1, 5));
+        }
+    }, '#FFF', rep, true),
     eye: () => makeCanvasTexture(
         (ctx) => {
             ctx.fillStyle = "#000"

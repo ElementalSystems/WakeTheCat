@@ -124,11 +124,14 @@ export function makeWorld() {
 
     // The world plane
     const planeMaterial = new THREE.MeshStandardMaterial({
-        map: textures.pitted(4, 50),
-        color: "#800"
+        map: textures.pitted(3, 100),
+        bumpMap: textures.pitted(5, 44),
+        bumpScale: 1,
+        color: "#262",
+        roughness: .2,
 
     });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(500, 500), planeMaterial);
+    const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 10, 10), planeMaterial);
     plane.receiveShadow = true; // plane will receive shadows
     plane.rotation.x = -Math.PI / 2; // make it horizontal
     scene.add(plane);
@@ -201,9 +204,9 @@ export function makeWorld() {
 
     }
 
-    //startLevel(makeLevel(levF[5]()));
-    startLevel(makeLevel(levF.test()));
-    //startLevel(makeLevel(levF.start()));
+    //startLevel(makeLevel(levF[7]()));
+    //startLevel(makeLevel(levF.test()));
+    startLevel(makeLevel(levF.start()));
 
 
     const movePiece = (p) => {

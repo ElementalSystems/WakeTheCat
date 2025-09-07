@@ -11,7 +11,7 @@ setMVol(.33);
 const fxVolume = audioCtx.createGain(); //fx master volume
 fxVolume.connect(audioCtx.destination);
 export const setFXVol = (v) => fxVolume.gain.setValueAtTime(v, audioCtx.currentTime);
-setFXVol(.66);
+setFXVol(.33);
 
 
 

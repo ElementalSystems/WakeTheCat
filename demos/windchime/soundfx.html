@@ -28,6 +28,17 @@
     <button onclick="playCollide(1)">Long</button>
     <button onclick="playCollide(.5)">Collision</button>
     <hr />
+    Hinge
+    <button onclick="squeak()">Squeak</button>
+    <hr />
+    Cat Noises
+    <button onclick="mew(3)">Mew 3</button>
+    <button onclick="mew(1)">Mew 1</button>
+    <button onclick="mew(3,0,1000,800)">Mew High</button>
+    <button onclick="mew(3,0,200,500)">Mew low Up</button>
+    <button onclick="mew(3,0,400,100)">Mew low down</button>
+    <button onclick="yowl(3)">Yowl</button>
+    <hr />
 
 
     <script>
@@ -48,6 +59,18 @@
             return noise;
         }
 
+        function makeDistortionCurve(amount) {
+            const k = typeof amount === "number" ? amount : 50;
+            const n_samples = 44100;
+            const curve = new Float32Array(n_samples);
+            const deg = Math.PI / 180;
+            for (let i = 0; i < n_samples; ++i) {
+                const x = (i * 2) / n_samples - 1;
+                curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
+            }
+            return curve;
+        }
+
         function playGrind(freq, rep, dur) {
             // Noise source (buffered white noise)
             const noise = noiseS()
@@ -57,18 +80,6 @@
             filter.type = "lowpass";
             filter.frequency.value = freq;
 
-            // Distortion curve
-            function makeDistortionCurve(amount) {
-                const k = typeof amount === "number" ? amount : 50;
-                const n_samples = 44100;
-                const curve = new Float32Array(n_samples);
-                const deg = Math.PI / 180;
-                for (let i = 0; i < n_samples; ++i) {
-                    const x = (i * 2) / n_samples - 1;
-                    curve[i] = ((3 + k) * x * 20 * deg) / (Math.PI + k * Math.abs(x));
-                }
-                return curve;
-            }
             const distortion = audioCtx.createWaveShaper();
             distortion.curve = makeDistortionCurve(200);
             distortion.oversample = "4x";
@@ -168,6 +179,100 @@
             noise.start(now);
             noise.stop(now + dur);
         }
+
+        function mew(dur, off = 0, fr = 600, fre = 400, rep = 30) {
+            const now = audioCtx.currentTime + off;
+
+            // Base vocal oscillator
+            const osc = audioCtx.createOscillator();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(400, now); // base pitch (~cat meow)
+            osc.frequency.exponentialRampToValueAtTime(fr, now + dur * .2); // upward screech
+            osc.frequency.linearRampToValueAtTime(fre, now + dur * .8); // then settle
+
+            // First formant filter (throat resonance)
+            const formant1 = audioCtx.createBiquadFilter();
+            formant1.type = "bandpass";
+            formant1.frequency.value = 1000; // resonance frequency
+            formant1.Q.value = 4;
+
+            // Second formant filter (mouth resonance)
+            const formant2 = audioCtx.createBiquadFilter();
+            formant2.type = "bandpass";
+            formant2.frequency.value = 2500;
+            formant2.Q.value = 6;
+
+            // Add jittery modulation (for angry instability)
+            const lfo = audioCtx.createOscillator();
+            lfo.frequency.value = rep; // jitter speed
+            const lfoGain = audioCtx.createGain();
+            lfoGain.gain.value = 40; // +/- Hz
+            lfo.connect(lfoGain).connect(osc.frequency);
+            lfo.start(now);
+
+            // Amplitude envelope
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0.001, now);
+            gain.gain.exponentialRampToValueAtTime(1.0, now + dur * 0.05); // quick attack
+            gain.gain.setValueAtTime(1.0, now + dur * 0.5); // sustain
+            gain.gain.exponentialRampToValueAtTime(0.001, now + dur * 1.2); // decay
+
+            // Connect chain: osc -> formants -> gain -> out
+            osc.connect(formant1).connect(formant2).connect(gain).connect(audioCtx.destination);
+
+            // Start/stop
+            osc.start(now);
+            osc.stop(now + dur);
+        }
+
+        function yowl(dur) {
+
+            mew(dur, 0, 600, 400, 30);
+            mew(dur - .1, .1, 800, 1000, 30);
+            mew(dur - .2, .2, 200, 500, 20);
+            mew(dur - .5, .4, 500, 100, 10);
+            mew(dur - .2, 0, 500, 1200, 40);
+
+        }
+
+        function squeak() {
+            // Main oscillator for squeak
+            const osc = audioCtx.createOscillator();
+            osc.type = "sawtooth"; // rough and raspy
+
+            // Gain for volume shaping
+            const gain = audioCtx.createGain();
+            gain.gain.setValueAtTime(0, audioCtx.currentTime);
+
+            // Low-pass filter to give resonance
+            const filter = audioCtx.createBiquadFilter();
+            filter.type = "lowpass";
+            filter.frequency.setValueAtTime(200, audioCtx.currentTime);
+
+            // Connect nodes
+            osc.connect(filter).connect(gain).connect(audioCtx.destination);
+
+            // Frequency starts low then wiggles around
+            osc.frequency.setValueAtTime(120, audioCtx.currentTime);
+            for (let i = 0; i < 10; i++) {
+                let t = audioCtx.currentTime + i * 0.3;
+                let freq = 100 + Math.random() * 100; // random squeak pitch
+                osc.frequency.linearRampToValueAtTime(freq, t + 0.25);
+            }
+
+            // Slowly raise gain (as if opening further)
+            gain.gain.linearRampToValueAtTime(0.2, audioCtx.currentTime + 0.5);
+            gain.gain.linearRampToValueAtTime(0.05, audioCtx.currentTime + 3.5);
+
+            // Filter sweep for resonance change
+            filter.frequency.linearRampToValueAtTime(1000, audioCtx.currentTime + 3.5);
+
+            // Start and stop
+            osc.start(audioCtx.currentTime);
+            osc.stop(audioCtx.currentTime + 4);
+        }
+
+
 
     </script>
 </body>

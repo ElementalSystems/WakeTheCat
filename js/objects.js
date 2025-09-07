@@ -42,6 +42,7 @@ function makeCO(mat, objs, sts = [{}], add = {}) {
         var bmat = Array.isArray(mat) ? (mat[i] ?? mat[0]) : mat;
         var mesh = new THREE.Mesh(geo, bmat);
         mesh.castShadow = true;
+        mesh.receiveShadow = true;
         bits.push(mesh);
         group.add(mesh);
     });
@@ -77,17 +78,14 @@ export const objF = {
     ),
     plat: (h = 8) => makeCO(
         new THREE.MeshStandardMaterial({
-            map: textures.frame(),
-            color: "#FF5",
-            side: THREE.DoubleSide,
+            map: textures.wood(),
+            color: "#EC8",
             metalness: 0,
-            roughness: 0.1
+            roughness: 0.5
         }),
         [
             new THREE.BoxGeometry(8, .5, 8).translate(0, 0, 0),
             new THREE.CylinderGeometry(1, 1, h, 10).translate(0, -h / 2, 0),
-            new THREE.BoxGeometry(10, .5, 10).translate(0, -h, 0),
-
         ]
     ),
     gRing: (h = 5) => makeCO(
@@ -105,45 +103,86 @@ export const objF = {
     ),
 
     needle: (l = 6) => makeCO(
-        new THREE.MeshStandardMaterial({
-            color: "#BB8",
-            bumpMap: textures.diag(),
-            bumpScale: 1,
-            metalness: 0,
-            roughness: 0.3
-        }),
+        [
+            new THREE.MeshStandardMaterial({
+                color: "#A95",
+                map: textures.wood(1),
+                bumpMap: textures.diag(),
+                bumpScale: 2,
+                metalness: 0,
+                roughness: 0.2
+            }),
+            new THREE.MeshStandardMaterial({
+                color: "#A95",
+                map: textures.wood(1),
+                metalness: 0,
+                roughness: 0.2
+            }),
+        ],
         [
             new THREE.CylinderGeometry(.25, .25, l, 25),
-            new THREE.CylinderGeometry(.25, .01, 3, 25).translate(0, -l / 2 - 1.5, 0),
             new THREE.CylinderGeometry(.7, .8, 1, 25).translate(0, l / 2 + .5, 0),
+            new THREE.CylinderGeometry(.25, .01, 3, 25).translate(0, -l / 2 - 1.5, 0),
+
         ],
         [
             { d: 1200, snd: sFX.spin },
             { d: 800, snd: sFX.spin, y: -(l + 1), sub: { 0: { ry: 3.14 * 2 } } } //state 1 = slide left
         ]
     ),
+    hinge: () => {
+        const met = new THREE.MeshStandardMaterial({
+            color: "#FF8",
+            bumpMap: textures.wood(2),
+            bumpScale: 1,
+            metalness: .4,
+            roughness: 0
+        });
+        return makeCO(
+            [
+                new THREE.MeshStandardMaterial({
+                    color: "#A95",
+                    map: textures.wood(2),
+                    metalness: 0,
+                    roughness: 0.2
+                }), met, met, met
+
+            ],
+            [
+                new THREE.BoxGeometry(2, 2, 2).translate(1.2, 1.1, 0),
+                new THREE.BoxGeometry(2, .05, 2).translate(1.2, .1, 0),
+                new THREE.CylinderGeometry(.25, .25, 2).translate(0, 0, 0).rotateX(3.14 / 2),
+                new THREE.BoxGeometry(2, .05, 2).translate(1.2, -.1, 0),
+                new THREE.BoxGeometry(2, 2, 2).translate(1.2, -1.1, 0),
+
+            ],
+            [
+                { d: 3000 },
+                { d: 300, rz: 3.14 / 2, sub: { 4: { rz: -3.14 / 2 }, 5: { rz: -3.14 / 2 } } },
+            ]
+        )
+    },
     press: () => {
         var main = new THREE.MeshStandardMaterial({
-            map: textures.frame(),
-            flatShading: true,
-            metalness: 0,
-            roughness: 0.5
+            bumpMap: textures.dimple(10),
+            bumpScale: 2,
+            color: "#800",
+            roughness: 0.2
         });
         var silver = new THREE.MeshStandardMaterial({
-            bumpMap: textures.frame(),
-            bumpScale: 5,
+            bumpMap: textures.lines(),
+            bumpScale: 2,
             color: "#FFD",
-            metalness: 0.7,
+            metalness: .8,
             roughness: 0.1
         });
         return makeCO(
             [main, silver, silver],
             [
-                new THREE.CylinderGeometry(2, 2, 4, 8, 4),
+                new THREE.CylinderGeometry(2, 2, 4, 20, 4),
                 new THREE.CylinderGeometry(1.5, 1.5, 4, 20, 4).translate(0, .5, 0),
-                new THREE.CylinderGeometry(1, 1, 4, 20, 4).translate(0, 1, 0),
-                new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
-                new THREE.CylinderGeometry(2, 2, .5, 8).translate(0, 3, 0),
+                new THREE.CylinderGeometry(1.2, 1.2, 4, 20, 4).translate(0, 1, 0),
+                new THREE.CylinderGeometry(2, 2, .5, 20).translate(0, 3, 0),
             ],
             [
                 { d: 800, snd: sFX.woosh },
@@ -154,10 +193,10 @@ export const objF = {
     },
     wheel: () => makeCO(
         new THREE.MeshStandardMaterial({
-            color: "#FF0",
+            color: "#AA0",
             bumpMap: textures.pitted(),
             bumpScale: .5,
-            metalness: .9,
+            metalness: .8,
             roughness: 0.1
         }),
         [
@@ -182,13 +221,12 @@ export const objF = {
         return makeCO(
             [
                 new THREE.MeshStandardMaterial({
-                    color: "#060",
-                    flatShading: true,
+                    color: "#A84",
+                    map: textures.wood(2),
                     metalness: 0,
                     roughness: 1
                 }),
                 new THREE.MeshStandardMaterial({
-                    //map: textures.text(t, l1, l2, l3),
                     map: textures.text(t, l1, l2, l3, "#000", "#CC8"),
                     bumpMap: textures.text(t, l1, l2, l3, "#000", "#FFF"),
                     bumpScale: 4,
@@ -223,8 +261,8 @@ export const objF = {
             [
                 new THREE.CapsuleGeometry(1, 2).rotateX(3.14 / 2).translate(0, 0, 0),//body
 
-                new THREE.SphereGeometry(.2).rotateY(-3.14 / 2).rotateX(-3.14 / 4).translate(.3, 1.8, 2.4),//eyes
-                new THREE.SphereGeometry(.2).rotateY(-3.14 / 2).rotateX(-3.14 / 4).translate(-.3, 1.8, 2.4),
+                new THREE.SphereGeometry(.2).rotateY(-3.14 / 2).rotateX(-3.14 / 4).translate(.3, 1.8, 2.3),//eyes
+                new THREE.SphereGeometry(.2).rotateY(-3.14 / 2).rotateX(-3.14 / 4).translate(-.3, 1.8, 2.3),
 
                 new THREE.CapsuleGeometry(.6, 1).rotateX(3.14 / 2).translate(0, 1, 2),//nose
                 new THREE.CapsuleGeometry(.8, 1).rotateX(3.14 / 4).translate(0, 1, 1.5),//Neck
@@ -237,7 +275,7 @@ export const objF = {
                 new THREE.ConeGeometry(.3, .9, 8, 1, true, 3.14 / 2, 3.14).translate(.3, 2.3, 2.2),//Ears
                 new THREE.ConeGeometry(.3, .9, 8, 1, true, 3.14 / 2, 3.14).translate(-.3, 2.3, 2.2),
 
-                new THREE.TorusGeometry(1, .15, 6, 12, 4).rotateX(-3.14 / 2).translate(-1, 0, -2.2),
+                new THREE.TorusGeometry(1, .15, 6, 12, 4).rotateX(-3.14 / 2).translate(-1, 0, -2.2),//tail
 
             ],
 
