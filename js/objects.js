@@ -89,7 +89,7 @@ export const objF = {
         [
             new THREE.BoxGeometry(8, .5, 8).translate(0, 0, 0),
             new THREE.CylinderGeometry(1, 1, h, 10).translate(0, -h / 2, 0),
-        ]
+        ], [], { passDown: true }
     ),
     gRing: (h = 5) => makeCO(
         new THREE.MeshStandardMaterial({
@@ -102,7 +102,7 @@ export const objF = {
         [
             ringMesh(.6, .4, .3),
             new THREE.BoxGeometry(.3, h, .3).translate(0, -h / 2 - .3, .15),
-        ],
+        ], [], { passDown: true }
     ),
 
     needle: (l = 6) => makeCO(
@@ -160,8 +160,8 @@ export const objF = {
 
             ],
             [
-                { d: 3000 },
-                { d: 300, rz: 3.14 / 2, sub: { 4: { rz: -3.14 / 2 }, 5: { rz: -3.14 / 2 } } },
+                { d: 3000, snd: sFX.hng },
+                { d: 300, snd: sFX.hng, rz: 3.14 / 2, sub: { 4: { rz: -3.14 / 2 }, 5: { rz: -3.14 / 2 } } },
             ]
         )
     },

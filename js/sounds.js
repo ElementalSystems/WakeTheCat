@@ -142,6 +142,7 @@ export const sFX = {
         noise.start(now);
         noise.stop(now + cut);
     },
+    hng: (d, c) => sFX.mew(d, c, 0, 100, 200, 10),
     mew: (dur, cut, off = 0, fr = 600, fre = 400, rep = 30) => {
         const now = audioCtx.currentTime + off;
 
@@ -175,8 +176,8 @@ export const sFX = {
         // Amplitude envelope
         const gain = audioCtx.createGain();
         gain.gain.setValueAtTime(0.001, now);
-        gain.gain.exponentialRampToValueAtTime(1.0, now + dur * 0.05); // quick attack
-        gain.gain.setValueAtTime(1.0, now + dur * 0.5); // sustain
+        gain.gain.exponentialRampToValueAtTime(6, now + dur * 0.05); // quick attack
+        gain.gain.setValueAtTime(6, now + dur * 0.5); // sustain
         gain.gain.exponentialRampToValueAtTime(0.001, now + dur * 1.2); // decay
 
         // Connect chain: osc -> formants -> gain -> out

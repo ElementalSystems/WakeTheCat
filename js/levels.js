@@ -2,33 +2,26 @@ import * as THREE from 'three';
 import { textures } from './textures.js';
 import { objF } from './objects.js';
 
-/* angles and points
-| Point | Angle (radians) | Coordinates (x, y) |
-| ----- | --------------- | ------------------ |
-| 1     | 0.00            | (17.00, 0.00)      |
-| 2     | 0.79 ($\pi/4$)  | (12.02, 12.02)     |
-| 3     | 1.57 ($\pi/2$)  | (0.00, 17.00)      |
-| 4     | 2.36 ($3\pi/4$) | (-12.02, 12.02)    |
-| 5     | 3.14 ($\pi$)    | (-17.00, 0.00)     |
-| 6     | 3.93 ($5\pi/4$) | (-12.02, -12.02)   |
-| 7     | 4.71 ($3\pi/2$) | (0.00, -17.00)     |
-| 8     | 5.50 ($7\pi/4$) | (12.02, -12.02)    |
-
-*/
 
 const mkLevP = (l) =>
 ({
     x: (21 - l / 2.4) * Math.sin(l * 3.14 / 6), z: (21 - l / 2.4) * Math.cos(l * 3.14 / 6), y: l + 1, ry: l * 3.14 / 6, add: { passDown: false }
 });
 
+const mkL = (l, t1, t2, t3, t4) => (
+    [
+        { n: 'cat' + l, g: objF.cat(null, "#FFE", "#48F"), p: { x: (21 - l / 2.4) * Math.sin(l * 3.14 / 6), z: (21 - l / 2.4) * Math.cos(l * 3.14 / 6), y: l + 1, ry: l * 3.14 / 6, add: { passDown: false } }, r: [{ st: 1, con: [], res: 100 }] },
+        { n: 'p' + l, g: objF.plat(10), p: { parent: 'cat' + l, x: 0, z: 0, y: -1 } },
+        { n: 's' + l, g: objF.sign(t1, t2, t3, t4), p: { parent: 'cat' + l, y: -3, z: -4 } },
+    ]
+)
+
+
+
 export const levF = {
     start: () => ({
         obj: [
-            { n: 'n1', g: objF.needle(5), p: { x: 0, y: 5 }, },
-            //lev 1
-            { n: 'cat1', g: objF.cat(null, "#FFE", "#48F"), p: { ...mkLevP(0), s: .6 }, r: [{ st: 1, con: [], res: 101 }] },
-            { n: 'p1', g: objF.plat(10), p: { parent: 'cat1', x: 0, z: 0, y: -1, add: { passDown: true } } },
-            { n: 's1', g: objF.sign("1. Snowy", "sweet kitten", "will teach", "you the game"), p: { parent: 'cat1', y: -3, z: -4, add: { passDown: true } } },
+            ...mkL(0, "1. Snowy", "loves her", "knitting", "needles"),
             //lev 2
             { n: 'cat2', g: objF.cat(textures.tabby(), "#666", "#48F"), p: mkLevP(1), r: [{ st: 1, con: [], res: 102 }] },
             { n: 'p2', g: objF.plat(10), p: { parent: 'cat2', x: 0, z: 0, y: -1, add: { passDown: true } } },
@@ -115,8 +108,7 @@ export const levF = {
 
         ]
     }),
-    1: () => ({ //needle teacher
-        ref: 1,
+    0: () => ({ //needle teacher
         obj: [
             { n: 's1', g: objF.plat(5), p: { y: 5, ry: 1.5 } },
             { n: 'cat', g: objF.cat(null, "#FFE", "#48F"), p: { parent: 's1', y: 1, ry: -1 } },

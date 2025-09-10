@@ -29,7 +29,8 @@
     <button onclick="playCollide(.5)">Collision</button>
     <hr />
     Hinge
-    <button onclick="squeak()">Squeak</button>
+    <button onclick="mew(.3,.3,0,200,100,10)">Down</button>
+    <button onclick="mew(3,3,0,100,200,10)">Up</button>
     <hr />
     Cat Noises
     <button onclick="mew(3,3)">Mew 3</button>
@@ -213,8 +214,8 @@
             // Amplitude envelope
             const gain = audioCtx.createGain();
             gain.gain.setValueAtTime(0.001, now);
-            gain.gain.exponentialRampToValueAtTime(1.0, now + dur * 0.05); // quick attack
-            gain.gain.setValueAtTime(1.0, now + dur * 0.5); // sustain
+            gain.gain.exponentialRampToValueAtTime(5.0, now + dur * 0.05); // quick attack
+            gain.gain.setValueAtTime(4.0, now + dur * 0.5); // sustain
             gain.gain.exponentialRampToValueAtTime(0.001, now + dur * 1.2); // decay
 
             // Connect chain: osc -> formants -> gain -> out
@@ -226,12 +227,11 @@
         }
 
         function yowl(dur) {
-
-            mew(dur, 0, 600, 400, 30);
-            mew(dur - .1, .1, 800, 1000, 30);
-            mew(dur - .2, .2, 200, 500, 20);
-            mew(dur - .5, .4, 500, 100, 10);
-            mew(dur - .2, 0, 500, 1200, 40);
+            mew(dur, dur, 0, 600, 400, 30);
+            mew(dur - .1, dur, .1, 800, 1000, 30);
+            mew(dur - .2, dur, .2, 200, 500, 20);
+            mew(dur - .5, dur, .4, 500, 100, 10);
+            mew(dur - .2, dur, 0, 500, 1200, 40);
 
         }
 

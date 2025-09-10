@@ -209,9 +209,9 @@ export function makeWorld() {
         } else levIn();
     }
 
-    startLevel(makeLevel(levF[10]()));
+    //startLevel(makeLevel(levF[11]()));
     //startLevel(makeLevel(levF.test()));
-    //startLevel(makeLevel(levF.start()));
+    startLevel(makeLevel(levF.start()));
 
 
     const movePiece = (p) => {
