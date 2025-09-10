@@ -557,6 +557,68 @@ export const levF = {
 
     }),
 
+    11: () => ({ //unhinged
+        irx: .6,
+        iry: .6,
+        obj: [
+
+            {
+                n: 'w1', g: objF.wheel(), p: { x: 0, z: 0, y: 3, rz: .3, is: 3 },
+                r: [
+                    { st: 4, con: [{ o: 'h2', st: 0 },], res: .7 },
+                    { st: 1, con: [{ o: 'l1', st: [1, 2] },], res: .9 },
+                    { st: 2, con: [{ o: 'h2', st: 0 },], res: .05 },
+                    { st: 3, con: [{ o: 'h2', st: 0 },], res: .5 },
+                ],
+            },
+            {
+                n: 'h1', g: objF.hinge(), p: { parent: 'w1', y: 3, x: 0, z: 1.1, ry: 3.14 / 2 },
+                r: [
+                    { st: 1, con: [{ o: 'w1', st: 3 },], res: .1 },
+                    { st: 1, con: [{ o: 'w1', st: 0 },], res: .55 },
+                    { st: 1, con: [{ o: 'w1', st: 1 },], res: .16 },
+                    { st: 1, con: [{ o: 'w1', st: 2 },], res: 10 },
+                ],
+            },
+
+            { n: 'p1', g: objF.plat(4), p: { parent: 'h1', y: 6, x: 1.25 } },
+            {
+                n: 'cat', g: objF.cat(textures.blochy("#8508", "#FA48", "#000A", 15), "#FFF", "#FF0"),
+                p: { parent: 'p1', y: 1, ry: -3.14 * .4 }
+            },
+
+            {
+                n: 'h2', g: objF.hinge(), p: { y: 2, x: 0, z: 9, ry: 3.14 / 2 },
+                r: [
+                    { st: 1, con: [{ o: 'h3', st: 0 },], res: .55 },
+                    { st: 0, con: [{ o: 'w1', st: 0 },], res: .2 },
+                ],
+            },
+            { n: 'gh1', g: objF.gRing(5), p: { parent: 'h2', sx: 6.5, sz: 5, y: 3, x: 6, z: .75, rx: 0, rz: 3.14 / 2, ry: 3.14 } },
+            {
+                n: 'h3', g: objF.hinge(), p: { parent: 'h2', y: 6, x: 0, z: 0, rz: 3.14 / 2, rx: 3.14 },
+                r: [
+                    { st: 0, con: [{ o: 'h2', st: 1 },], res: .05 },
+
+                ],
+            },
+            { n: 'gr2', g: objF.gRing(5), p: { parent: 'h3', y: 6, x: 1.25, z: 0, rx: 0, rz: 0, ry: 3.14 } },
+
+            { n: 's1', g: objF.sign("🐈‍⬛🐈‍⬛🐈‍⬛", "UNHINGED"), p: { y: 0, x: -13, z: 0, rx: 0, rz: -.5 } },
+
+            {
+                n: 'l1', g: objF.press(), p: { is: 1, y: 0, x: 9, z: 0, rx: 0, rz: 0 },
+                r: [
+                    { st: 1, con: [{ o: 'w1', st: 1 },], res: .3 },
+                ],
+            },
+            { n: 's2', g: objF.sign("🐈🐈🐈", "UNHINGED"), p: { parent: 'l1', y: 3.8, x: 1.3, z: 0, rx: 0, rz: .5 } },
+
+
+
+        ]
+
+    }),
 
 
 };
