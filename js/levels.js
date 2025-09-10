@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { textures } from './textures.js';
 import { objF, cat } from './objects.js';
+import { inter, getFIL } from './util.js'
 
 
 const mkLevP = (l) =>
@@ -23,17 +24,19 @@ const mkL = (l, t1, t2, t3, t4) => {
 
 export const levF = {
     start: () => ({
+        irx: inter(getFIL() / 13, 0, .7),
+        iry: -getFIL() / 6 * 3.14,
         obj: [
             ...mkL(0, "1. Snowy", "loves her", "knitting", "needles"),
             ...mkL(1, "2. Tigress", "a free", "wheeling", "queen"),
-            ...mkL(2, "2. Minx", "", "innocent and", "so fluffy"),
-            ...mkL(3, "3. Spot", "feels safe ", "at", "altitude"),
-            ...mkL(4, "4. Inked", "a sign ", "of our", "times"),
-            ...mkL(5, "5. Splat", "feels safe ", "when he's", "high"),
-            ...mkL(6, "6. Gambit", "", "built", "a lock"),
-            ...mkL(7, "7. Ginger", "", "is safe in", "a box"),
-            ...mkL(8, "8. Jack", "the old man", "stays under", "cover"),
-            ...mkL(9, "9. Rogue", "", "has become", "unhinged"),
+            ...mkL(2, "3. Minx", "", "innocent and", "so fluffy"),
+            ...mkL(3, "4. Spot", "feels safe ", "at", "altitude"),
+            ...mkL(4, "5. Inked", "a sign ", "of our", "times"),
+            ...mkL(5, "6. Splat", "feels safe ", "when he's", "high"),
+            ...mkL(6, "7. Gambit", "", "built", "a lock"),
+            ...mkL(7, "8. Ginger", "", "is safe in", "a box"),
+            ...mkL(8, "9. Jack", "the old man", "stays under", "cover"),
+            ...mkL(9, "10. Rogue", "", "has become", "unhinged"),
             ...mkL(10, "11. Thomas", "", "the engineer", ""),
         ]
     }),
