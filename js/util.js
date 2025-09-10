@@ -11,9 +11,13 @@ function unsetElementClass(e, cls) {
         e.classList.remove(cls);
 }
 
+
+//random numbers
 export const ranR = (s, e) => s + Math.random() * (e - s); //random in range s to e smooth
 export const randA = (a) => a[Math.floor(Math.random() * a.length)]; //select a random element of array
 
+
+//call each frame
 var _onFrameList = [];
 var _lastFrameT = 0;
 export const onFrame = (f) => _onFrameList.push(f)
@@ -50,6 +54,7 @@ export function callEachFrame(time, each, end) {
     onFrame(func);
 }
 
+//clamping and ease functions
 export function inRange(s, e, v) {
     if (v < s) return s;
     if (v > e) return e;
@@ -85,3 +90,15 @@ function setMaterialIndex(geo, index) {
     for (var i = 0; i < geo.faces.length; i += 1)
         geo.faces[i].materialIndex = index;
 }
+
+
+//local Storage
+var _complete = JSON.parse(localStorage.getItem("js13k2025-WakeTheCat") || "[false,false]");
+export const setLC = (lev, set = true) => {
+    _complete[lev] = set;
+    localStorage.setItem("js13k2025-WakeTheCat", JSON.stringify(_complete));
+}
+
+export const getLC = (lev) => _complete[lev];
+
+export const getFIL = () => _complete.findIndex(v => !v); //Returns index of first false

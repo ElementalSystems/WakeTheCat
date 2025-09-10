@@ -54,7 +54,10 @@ function makeCO(mat, objs, sts = [{}], add = {}) {
         node: b,
         sts: getSubstates(i, sts),
     }));
-    Object.assign(controller, add);
+    if (add) {
+        controller.p_adds = add;
+        Object.assign(controller, add);
+    }
     controller.add(group);
     return controller;
 }
@@ -237,7 +240,8 @@ export const objF = {
                 new THREE.BoxGeometry(5.5, 5.5, .1).translate(0, 8, .1),
                 new THREE.BoxGeometry(.5, 6, .5).translate(0, 2.5, 0),
             ],
-
+            [],
+            { passDown: true }
         );
 
     },
@@ -259,7 +263,7 @@ export const objF = {
             }), eyeM, eyeM],
 
             [
-                new THREE.CapsuleGeometry(1, 2).rotateX(3.14 / 2).translate(0, 0, 0),//body
+                new THREE.CapsuleGeometry(1, 2, 5, 10).rotateX(3.14 / 2).translate(0, 0, 0),//body
 
                 new THREE.SphereGeometry(.2).rotateY(-3.14 / 2).rotateX(-3.14 / 4).translate(.3, 1.8, 2.3),//eyes
                 new THREE.SphereGeometry(.2).rotateY(-3.14 / 2).rotateX(-3.14 / 4).translate(-.3, 1.8, 2.3),
@@ -267,17 +271,56 @@ export const objF = {
                 new THREE.CapsuleGeometry(.6, 1).rotateX(3.14 / 2).translate(0, 1, 2),//nose
                 new THREE.CapsuleGeometry(.8, 1).rotateX(3.14 / 4).translate(0, 1, 1.5),//Neck
                 new THREE.SphereGeometry(1.1).translate(0, .2, -1.2).scale(1.2, 1, 1),//Bum
-                new THREE.CylinderGeometry(.1, .4, 2.5).rotateX(3.14 / 2).rotateY(-3.14 / 20).translate(-.7, -.5, 2.5),///front legs
-                new THREE.CylinderGeometry(.1, .4, 2.5).rotateX(3.14 / 2).rotateY(3.14 / 20).translate(.7, -.5, 2.5),
-                new THREE.CylinderGeometry(.2, .4, 2.5).rotateX(3.14 / 2).rotateY(3.14 / 20).translate(1, -.5, 0),//back legs
-                new THREE.CylinderGeometry(.2, .4, 2.5).rotateX(3.14 / 2).rotateY(-3.14 / 20).translate(-1, -.5, 0),
+                new THREE.CylinderGeometry(.1, .4, 2.5).rotateX(3.14 / 2).rotateY(-3.14 / 20).translate(-.7, -.8, 2),///front legs
+                new THREE.CylinderGeometry(.1, .4, 2.5).rotateX(3.14 / 2).rotateY(3.14 / 20).translate(.7, -.8, 2),
+                new THREE.CylinderGeometry(.2, .4, 2.5).rotateX(3.14 / 2 + .2).rotateY(3.14 / 20).translate(1, -.5, 0),//back legs
+                new THREE.CylinderGeometry(.2, .4, 2.5).rotateX(3.14 / 2 + .2).rotateY(-3.14 / 20).translate(-1, -.5, 0),
 
                 new THREE.ConeGeometry(.3, .9, 8, 1, true, 3.14 / 2, 3.14).translate(.3, 2.3, 2.2),//Ears
                 new THREE.ConeGeometry(.3, .9, 8, 1, true, 3.14 / 2, 3.14).translate(-.3, 2.3, 2.2),
 
-                new THREE.TorusGeometry(1, .15, 6, 12, 4).rotateX(-3.14 / 2).translate(-1, 0, -2.2),//tail
+                new THREE.TorusGeometry(1, .15, 6, 12, 4).rotateX(-3.14 / 2).scale(1, 2, 1.5).translate(-1, 0, -2.2),//tail
 
             ],
+            [
+                { d: 1000 }, //awake
+                { //asleep
+                    d: 1000,
+                    snd: sFX.mew,
+                    rz: 0,
+                    sub: {
+                        2: { y: -1.1, z: .2, x: -.1 },
+                        3: { y: -1.1, z: .2, x: .1 },
+                        4: { y: -1, z: .3 },
+                        5: { rx: .5, },
+                        7: { z: -.2, x: .5 },
+                        8: { z: -.2, x: -.5 },
+                        11: { x: -.8, y: -1, z: .5, rz: -.5 },//ears
+                        12: { x: .8, y: -1, z: .5, rz: +.5 },
+                        13: { x: 1, y: 0, ry: .7 },
+                    }
+                },
+                { //scared
+                    snd: sFX.yowl,
+                    d: 1000,
+                    rx: -.5,
+                    z: 5,
+                    y: 3,
+                    sub: {
+                        2: { x: -1, y: 0, z: .8, ry: .5 },
+                        3: { x: 1, y: 0, z: .8, ry: -.5 },
+                        7: { ry: -.5, rx: .5, y: 1, z: 1 },
+                        8: { ry: .5, rx: .5, y: 1, z: 1 },
+                        9: { rx: 2.5, z: -2.5, y: -1.2 },
+                        10: { rx: 2.5, z: -2.5, y: -1.2 },
+
+                        11: { x: -1, y: .6, z: 0, rz: -1 },
+                        12: { x: 1, y: .6, z: 0, rz: +1 },
+                        13: { z: 1, y: 1, rz: -2 },
+                    }
+                },
+
+            ], { passDown: true }
 
         );
 

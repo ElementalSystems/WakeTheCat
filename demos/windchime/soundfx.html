@@ -32,12 +32,12 @@
     <button onclick="squeak()">Squeak</button>
     <hr />
     Cat Noises
-    <button onclick="mew(3)">Mew 3</button>
-    <button onclick="mew(1)">Mew 1</button>
-    <button onclick="mew(3,0,1000,800)">Mew High</button>
-    <button onclick="mew(3,0,200,500)">Mew low Up</button>
-    <button onclick="mew(3,0,400,100)">Mew low down</button>
-    <button onclick="yowl(3)">Yowl</button>
+    <button onclick="mew(3,3)">Mew 3</button>
+    <button onclick="mew(1,1)">Mew 1</button>
+    <button onclick="mew(3,3,0,1000,800)">Mew High</button>
+    <button onclick="mew(3,3,0,200,500)">Mew low Up</button>
+    <button onclick="mew(3,3,0,400,100)">Mew low down</button>
+    <button onclick="yowl(3,3)">Yowl</button>
     <hr />
 
 
@@ -180,7 +180,7 @@
             noise.stop(now + dur);
         }
 
-        function mew(dur, off = 0, fr = 600, fre = 400, rep = 30) {
+        function mew(dur, cut, off = 0, fr = 600, fre = 400, rep = 30) {
             const now = audioCtx.currentTime + off;
 
             // Base vocal oscillator
@@ -222,7 +222,7 @@
 
             // Start/stop
             osc.start(now);
-            osc.stop(now + dur);
+            osc.stop(now + cut);
         }
 
         function yowl(dur) {

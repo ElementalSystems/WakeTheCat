@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import { textures } from './textures.js';
 import { initMouse } from './mouse.js';
 import { levF } from './levels.js'
-import { callEachFrame, siso, inter, si, so, frame } from './util.js';
+import { callEachFrame, siso, inter, si, so, frame, setLC } from './util.js';
 import { initVR } from './vr.js'
 import { sFX, pChimes } from './sounds.js'
 
@@ -14,6 +14,7 @@ function makeLevel(lev) {
     const addP = (name, ob, p, rls = []) => {
         const posNode = new THREE.Object3D();
         posNode.name = name;
+        if (ob.p_adds) Object.assign(posNode, ob.p_adds);
         Object.assign(posNode, p?.add);
         posNode.position.set(p.x ?? 0, p.y ?? 0, p.z ?? 0);
         posNode.rotation.set(p.rx ?? 0, p.ry ?? 0, p.rz ?? 0);
@@ -35,6 +36,7 @@ function makeLevel(lev) {
     pcs.forEach(d => addP(d.n, d.g, d.p, d.r));
     return {
         ir: lev.ir?.() || { x: lev.irx || 0, y: lev.iry || 0 }, //calculate or set or default initial view rotation
+        ref: lev.ref,
         node: puzzle,
         pieces: pieces,
         music: lev.music,
@@ -187,26 +189,29 @@ export function makeWorld() {
             var sty = scene.rotation.y;
             callEachFrame(1200, (r) => {
                 scene.rotation.set(inter(r, stx, level.ir.x, so), inter(r, sty, level.ir.y, so), 0)
-            }, () => { lMoving = false; })
+            }, () => {
+                if (lev.pieces.cat)
+                    moveP(lev.pieces.cat, 2000, 0, 1, 0, 1, so);
+                lMoving = false;
+            })
+
         }
         lMoving = true;
         pChimes(); //silence chimes
         if (level) { //dispose of old level
             callEachFrame(1000, (r) => {
-                level.node.position.set(0, inter(r, 0, 40, so), 0);
+                level.node.position.set(0, inter(r, 0, 50, so), 0);
             }, () => {
                 scene.remove(level.node)
                 freeLevel(level);
                 levIn();
             });
         } else levIn();
-
-
     }
 
-    //startLevel(makeLevel(levF[7]()));
+    startLevel(makeLevel(levF[10]()));
     //startLevel(makeLevel(levF.test()));
-    startLevel(makeLevel(levF.start()));
+    //startLevel(makeLevel(levF.start()));
 
 
     const movePiece = (p) => {
@@ -242,8 +247,12 @@ export function makeWorld() {
                 () => {
                     lMoving = false;
                     if (out == 10) {  //we won!
-                        console.log("MEEEOW!");
-                        startLevel(makeLevel(levF.start()));
+                        console.log("MEEEOW!", level.ref);
+                        if (level.ref) setLC(level.ref);
+                        sFX.yowl(3, 3);
+                        moveP(level.pieces.cat, 2000, 1, 2, 0, 1, so, () => {
+                            startLevel(makeLevel(levF.start()));
+                        });
                     }
                     if ((out >= 100) && (out < 200)) {
                         console.log("Start Level ", out);

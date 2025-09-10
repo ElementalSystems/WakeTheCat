@@ -6,12 +6,12 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 const mVolume = audioCtx.createGain(); //music master volume
 mVolume.connect(audioCtx.destination);
 export const setMVol = (v) => mVolume.gain.setValueAtTime(v, audioCtx.currentTime);
-setMVol(.33);
+setMVol(.05);
 
 const fxVolume = audioCtx.createGain(); //fx master volume
 fxVolume.connect(audioCtx.destination);
 export const setFXVol = (v) => fxVolume.gain.setValueAtTime(v, audioCtx.currentTime);
-setFXVol(.33);
+setFXVol(.6);
 
 
 
@@ -141,7 +141,61 @@ export const sFX = {
         noise.connect(noiseGain).connect(fxVolume);
         noise.start(now);
         noise.stop(now + cut);
-    }
+    },
+    mew: (dur, cut, off = 0, fr = 600, fre = 400, rep = 30) => {
+        const now = audioCtx.currentTime + off;
+
+        // Base vocal oscillator
+        const osc = audioCtx.createOscillator();
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(400, now); // base pitch (~cat meow)
+        osc.frequency.exponentialRampToValueAtTime(fr, now + dur * .2); // upward screech
+        osc.frequency.linearRampToValueAtTime(fre, now + dur * .8); // then settle
+
+        // First formant filter (throat resonance)
+        const formant1 = audioCtx.createBiquadFilter();
+        formant1.type = "bandpass";
+        formant1.frequency.value = 1000; // resonance frequency
+        formant1.Q.value = 4;
+
+        // Second formant filter (mouth resonance)
+        const formant2 = audioCtx.createBiquadFilter();
+        formant2.type = "bandpass";
+        formant2.frequency.value = 2500;
+        formant2.Q.value = 6;
+
+        // Add jittery modulation (for angry instability)
+        const lfo = audioCtx.createOscillator();
+        lfo.frequency.value = rep; // jitter speed
+        const lfoGain = audioCtx.createGain();
+        lfoGain.gain.value = 40; // +/- Hz
+        lfo.connect(lfoGain).connect(osc.frequency);
+        lfo.start(now);
+
+        // Amplitude envelope
+        const gain = audioCtx.createGain();
+        gain.gain.setValueAtTime(0.001, now);
+        gain.gain.exponentialRampToValueAtTime(1.0, now + dur * 0.05); // quick attack
+        gain.gain.setValueAtTime(1.0, now + dur * 0.5); // sustain
+        gain.gain.exponentialRampToValueAtTime(0.001, now + dur * 1.2); // decay
+
+        // Connect chain: osc -> formants -> gain -> out
+        osc.connect(formant1).connect(formant2).connect(gain).connect(fxVolume);
+        // Start/stop
+        osc.start(now);
+        osc.stop(now + cut);
+    },
+    yowl: (dur, cut) => {
+        console.log("yowling")
+        sFX.mew(dur, dur, 0, 600, 400, 30);
+        sFX.mew(dur - .1, dur, .1, 800, 1000, 30);
+        sFX.mew(dur - .2, dur, .2, 200, 500, 20);
+        sFX.mew(dur - .5, dur, .4, 500, 100, 10);
+        sFX.mew(dur - .2, dur, 0, 500, 1200, 40);
+    },
+
+
+
 
 }
 
