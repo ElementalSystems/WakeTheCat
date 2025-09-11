@@ -27,6 +27,8 @@ export function initVR(renderer, scene, camera, clickFunction) {
     const boxMaterial = new THREE.MeshStandardMaterial({
         color: "#FFF",
         map: textures.arrow(),
+        transparent: true,
+        opacity: .5
     });
     const con = new THREE.Group();
     [
@@ -42,7 +44,7 @@ export function initVR(renderer, scene, camera, clickFunction) {
         con.add(box);
     });
     con.visible = false;
-    con.position.set(0, 1, -.5)
+    con.position.set(0, 1.4, -.5)
     con.rotation.set(3.14 / 3, 0, 0)
     camera.parent.add(con);
 
