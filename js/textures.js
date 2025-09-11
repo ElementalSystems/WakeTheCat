@@ -128,7 +128,7 @@ export const textures = {
     }, "#FFF", 5, false),
     text: (title, line1 = '', line2 = '', line3 = '', bg = "#000", fg = "#FFF") => {
         return makeCanvasTexture((ctx) => {
-            ctx.font = "100px sans-serif";     // Font size and family
+            ctx.font = "90px sans-serif";     // Font size and family
             ctx.fillStyle = fg;     // Text color
             ctx.textAlign = "center";   // horizontal alignment
             ctx.textBaseline = "middle"; // vertical alignment

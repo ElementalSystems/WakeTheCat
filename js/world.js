@@ -211,8 +211,7 @@ export function makeWorld() {
         } else levIn();
     }
 
-    //startLevel(makeLevel(levF[11]()));
-    //startLevel(makeLevel(levF.test()));
+    //startLevel(makeLevel(12));
     startLevel(makeLevel('start'));
 
 

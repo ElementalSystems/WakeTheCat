@@ -43,11 +43,13 @@ export const cat = (i, p, r, n = false) => {
         { g: objF.cat(textures.blochy("#000F"), "#FFF", "#FD0"), },//3. spot
         { g: objF.cat(textures.blochy("#000A", "#000F", null, 8), "#FFF", "#AF8") },//4. inked
         { g: objF.cat(textures.blochy("#A80A", "#F82A", "#000A", 5), "#FFF", "#0F0") },//5.Splat           
-        { g: objF.cat(textures.blochy("#A60", "#000", 0, 3), "#FFF", "#AA0") },//5.Gambit  
-        { g: objF.cat(null, "#FA0", "#FF0") }, //6:Ginger                
-        { g: objF.cat(textures.tabby("#F804", "#FFF"), "#FA0", "#FF0") }, //7:Jack        
-        { g: objF.cat(textures.blochy("#DA0", null, null, 8), "#FFF", "#FF0") }, //8:Rogue          
-        { g: objF.cat(textures.blochy("#FA0", "#000", null, 8), "#FA8", "#0F0") }, //8:Rogue          
+        { g: objF.cat(textures.blochy("#A60", "#000", 0, 3), "#FFF", "#AA0") },//6.Gambit  
+        { g: objF.cat(null, "#FA0", "#FF0") }, //7:Ginger                
+        { g: objF.cat(textures.tabby("#F804", "#FFF"), "#FA0", "#FF0") }, //8:Jack        
+        { g: objF.cat(textures.blochy("#DA0", null, null, 8), "#FFF", "#FF0") }, //9:Rogue          
+        { g: objF.cat(textures.blochy("#FA0", "#000", null, 8), "#FA8", "#0F0") }, //10  
+        { g: objF.cat(textures.blochy("#8508", "#FA48", "#000A", 15), "#FFF", "#FF0"), p: { s: 1.3 } }, // 11   
+        { g: objF.cat(null, "#000", "#FF0"), }, //12:Midnight
     ][i];
     return {
         n: 'cat' + (n ? i : ''),
