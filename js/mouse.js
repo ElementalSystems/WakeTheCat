@@ -71,7 +71,7 @@ export function initMouse(scene, camera, clickFunction) {
         var yd = cy - dragStartY;
         scene.rotation.x = inRange(-.1, 1, dragStartRX + (yd / window.innerHeight) * 3.14);
         scene.rotation.y = dragStartRY + (xd / window.innerWidth) * 3.14;
-        console.log(scene.rotation.x, scene.rotation.y);
+        //console.log(scene.rotation.x, scene.rotation.y);
     }
 
     function clickSelect(sx, sy) {

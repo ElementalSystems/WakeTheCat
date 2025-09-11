@@ -544,7 +544,7 @@ export const levF = {
                     { st: 1, con: [{ o: 'w1', st: 1 }, { o: 'w2', st: [0, 3] },], res: .1 },
                     { st: 1, con: [{ o: 'w1', st: 2 }, { o: 'w2', st: [0, 1] },], res: .1 },
                     { st: 1, con: [{ o: 'w1', st: 3 }, { o: 'w2', st: [1, 2] },], res: .1 },
-                    { st: 1, con: [{ o: 'n1', st: 0 }, { o: 'w1', st: 2 }, { o: 'w2', st: 2 }, { o: 'w0', st: 2 }], res: 10 },
+                    { st: 1, con: [{ o: 'n1', st: 0 }, { o: 'w1', st: 2 }, { o: 'w2', st: [2, 3] }, { o: 'w0', st: 2 }], res: 10 },
                 ],
             },
             {

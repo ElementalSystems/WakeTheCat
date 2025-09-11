@@ -254,10 +254,8 @@ export function makeWorld() {
                             startLevel(makeLevel('start'));
                         });
                     }
-                    if ((out >= 100) && (out < 200)) {
-                        console.log("Start Level ", out);
+                    if ((out >= 100) && (out < 200))
                         startLevel(makeLevel(out - 100));
-                    }
                     p.st = ns; //sets the new state
                     if (p.node.wrapState && (ns == sts.length - 1)) {// the last one needs to wrap
                         p.st = 0;

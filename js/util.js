@@ -95,8 +95,10 @@ function setMaterialIndex(geo, index) {
 //local Storage
 var _complete = JSON.parse(localStorage.getItem("js13k2025-WakeTheCat")) || (new Array(13).fill(0));
 
-export const setLC = (lev, set = 1) => localStorage.setItem("js13k2025-WakeTheCat", JSON.stringify(_complete));
-
+export const setLC = (lev, set = 1) => {
+    _complete[lev] = set
+    localStorage.setItem("js13k2025-WakeTheCat", JSON.stringify(_complete));
+}
 export const getLC = (lev) => _complete[lev];
 
 export const getFIL = () => _complete.findIndex(v => !v); //Returns index of first false

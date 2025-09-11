@@ -187,7 +187,6 @@ export const sFX = {
         osc.stop(now + cut);
     },
     yowl: (dur, cut) => {
-        console.log("yowling")
         sFX.mew(dur, dur, 0, 600, 400, 30);
         sFX.mew(dur - .1, dur, .1, 800, 1000, 30);
         sFX.mew(dur - .2, dur, .2, 200, 500, 20);
@@ -244,7 +243,6 @@ function _chime() { //time to strike a random chime
 
 export function pChimes(c = null) //start the chimes with a set up or null to silence  
 {
-    console.log("Starting", c);
     if (!_c) setTimeout(_chime, 10); //start it if we need to
     _c = c;
 }
