@@ -1,6 +1,6 @@
 import {
     Shape, Path, ExtrudeGeometry, Group, Mesh, Object3D,
-    MeshStandardMaterial, DoubleSide, CylinderGeometry,
+    MeshStandardMaterial, DoubleSide, FrontSide, CylinderGeometry,
     TorusGeometry, BoxGeometry, CapsuleGeometry, SphereGeometry,
     ConeGeometry, PlaneGeometry, DirectionalLight, AmbientLight
 } from 'three';
@@ -91,17 +91,20 @@ function makeCO(mat, objs, sts = [{}], add = {}) {
     return controller;
 }
 
+export const msm = (col, map, r = 1, bm, bms, m = 0, s) => new MeshStandardMaterial({
+    color: col,
+    map: map,
+    roughness: r,
+    bumpMap: bm,
+    bumpScale: bms,
+    metalness: m,
+    side: s ? DoubleSide : FrontSide
+});
+
 export const wObj = (scene) => {
     // The world plane
-    const planeMaterial = new MeshStandardMaterial({
-        map: textures.pitted(3, 100),
-        bumpMap: textures.pitted(5, 44),
-        bumpScale: 1,
-        color: "#262",
-        roughness: .2,
-
-    });
-    const plane = new Mesh(new PlaneGeometry(100, 100, 10, 10), planeMaterial);
+    const plane = new Mesh(new PlaneGeometry(100, 100, 10, 10),
+        msm("#262", textures.pitted(3, 100), .2, textures.pitted(5, 44), 1));
     plane.receiveShadow = true; // plane will receive shadows
     plane.rotation.x = -Math.PI / 2; // make it horizontal
     scene.add(plane);
@@ -128,12 +131,7 @@ export const wObj = (scene) => {
 //The object factories build basic puzzle peices.
 export const objF = {
     basket: () => makeCO(
-        new MeshStandardMaterial({
-            map: textures.frame(),
-            side: DoubleSide,
-            metalness: 0,
-            roughness: 0.1
-        }),
+        msm(null, textures.frame(), .1, null, null, 0, true),
         [
             new CylinderGeometry(4, 4.2, .3, 32).translate(0, -.5, 0),
             new TorusGeometry(4, .5, 10, 30).rotateX(3.14 / 2),
@@ -144,25 +142,14 @@ export const objF = {
         { passDown: true }
     ),
     plat: (h = 8) => makeCO(
-        new MeshStandardMaterial({
-            map: textures.wood(),
-            color: "#EC8",
-            metalness: 0,
-            roughness: 0.5
-        }),
+        msm("#EC8", textures.wood(), .5),
         [
             new BoxGeometry(8, .5, 8).translate(0, 0, 0),
             new CylinderGeometry(1, 1, h, 10).translate(0, -h / 2, 0),
         ], [], { passDown: true }
     ),
     gRing: (h = 5) => makeCO(
-        new MeshStandardMaterial({
-            color: "#FF0",
-            bumpMap: textures.pitted(),
-            bumpScale: .5,
-            metalness: .9,
-            roughness: 0.1
-        }),
+        msm("#FF0", null, .1, textures.pitted(), .5, .9),
         [
             ringMesh(.6, .4, .3),
             new BoxGeometry(.3, h, .3).translate(0, -h / 2 - .3, .15),
@@ -171,20 +158,8 @@ export const objF = {
 
     needle: (l = 6) => makeCO(
         [
-            new MeshStandardMaterial({
-                color: "#A95",
-                map: textures.wood(1),
-                bumpMap: textures.diag(),
-                bumpScale: 2,
-                metalness: 0,
-                roughness: 0.2
-            }),
-            new MeshStandardMaterial({
-                color: "#A95",
-                map: textures.wood(1),
-                metalness: 0,
-                roughness: 0.2
-            }),
+            msm("#A95", textures.wood(1), .2, textures.diag(), 2),
+            msm("#A95", textures.wood(1), .2)
         ],
         [
             new CylinderGeometry(.25, .25, l, 25),
@@ -198,22 +173,11 @@ export const objF = {
         ]
     ),
     hinge: () => {
-        const met = new MeshStandardMaterial({
-            color: "#FF8",
-            bumpMap: textures.wood(2),
-            bumpScale: 1,
-            metalness: .4,
-            roughness: 0
-        });
+        const met = msm("#FF8", null, 0, textures.wood(2), 1, .4)
         return makeCO(
             [
-                new MeshStandardMaterial({
-                    color: "#A95",
-                    map: textures.wood(2),
-                    metalness: 0,
-                    roughness: 0.2
-                }), met, met, met
-
+                msm("#A95", textures.wood(2), .2),
+                met, met, met
             ],
             [
                 new BoxGeometry(2, 2, 2).translate(1.2, 1.1, 0),
@@ -230,21 +194,9 @@ export const objF = {
         )
     },
     press: () => {
-        var main = new MeshStandardMaterial({
-            bumpMap: textures.dimple(10),
-            bumpScale: 2,
-            color: "#800",
-            roughness: 0.2
-        });
-        var silver = new MeshStandardMaterial({
-            bumpMap: textures.lines(),
-            bumpScale: 2,
-            color: "#FFD",
-            metalness: .8,
-            roughness: 0.1
-        });
+        var silver = msm("#FFD", null, .1, textures.lines(), 2, .8);
         return makeCO(
-            [main, silver, silver],
+            [msm("#800", null, .2, textures.dimple(10), 2), silver, silver],
             [
                 new CylinderGeometry(2, 2, 4, 20, 4),
                 new CylinderGeometry(1.5, 1.5, 4, 20, 4).translate(0, .5, 0),
@@ -259,13 +211,7 @@ export const objF = {
         )
     },
     wheel: () => makeCO(
-        new MeshStandardMaterial({
-            color: "#AA0",
-            bumpMap: textures.pitted(),
-            bumpScale: .5,
-            metalness: .8,
-            roughness: 0.1
-        }),
+        msm("#AA0", null, .1, textures.pitted(), .5),
         [
             ringMesh(6, 5, 1).rotateX(3.14 / 2).translate(0, .5, 0),
             ringMesh(1.5, 1, 1).rotateX(3.14 / 2).translate(0, .5, 0),
@@ -287,17 +233,8 @@ export const objF = {
     sign: (t, l1, l2, l3) => {
         return makeCO(
             [
-                new MeshStandardMaterial({
-                    color: "#A84",
-                    map: textures.wood(2),
-                    metalness: 0,
-                    roughness: 1
-                }),
-                new MeshStandardMaterial({
-                    map: textures.text(t, l1, l2, l3, "#000", "#CC8"),
-                    bumpMap: textures.text(t, l1, l2, l3, "#000", "#FFF"),
-                    bumpScale: 4,
-                }),
+                msm("#A84", textures.wood(2), 1),
+                msm(null, textures.text(t, l1, l2, l3, "#000", "#CC8"), .8, textures.text(t, l1, l2, l3, "#000", "#FFF"), 4)
             ],
             [
                 new BoxGeometry(6, 6, .1).translate(0, 8, 0),
@@ -310,22 +247,10 @@ export const objF = {
 
     },
     cat: (coat, ccol = "#000", ecol = "#FF0") => {
-        let eyeM =
-            new MeshStandardMaterial({
-                map: textures.eye(),
-                color: ecol,
-            });
+        let eyeM = msm(ecol, textures.eye())
         return makeCO(
-            [new MeshStandardMaterial({
-                color: ccol,
-                map: coat,
-                metalness: 0,
-                bumpMap: textures.fur(),
-                bumpScale: 2,
-                side: DoubleSide,
-                roughness: .7,
-            }), eyeM, eyeM],
-
+            [msm(ccol, coat, .7, textures.fur(), 2, 0, true),
+                eyeM, eyeM],
             [
                 new CapsuleGeometry(1, 2, 5, 10).rotateX(3.14 / 2).translate(0, 0, 0),//body
 

@@ -38,11 +38,11 @@ function makeLevel(levR) {
 
     pcs.forEach(d => addP(d.n, d.g, d.p, d.r));
     return {
-        ir: lev.ir?.() || { x: lev.irx || 0, y: lev.iry || 0 }, //calculate or set or default initial view rotation
+        ir: { x: lev.irx || 0, y: lev.iry || 0 }, //calculate or set or default initial view rotation
         ref: Number.isInteger(+levR) ? +levR : -1,
         node: puzzle,
         pieces: pieces,
-        music: lev.music,
+        m: lev.m,
     }
 }
 
@@ -152,7 +152,7 @@ export function makeWorld() {
             level = lev;
             level.node.position.set(1000, 1000, 1000)
             scene.add(lev.node);
-            pChimes(lev.music); //play chimes if defined
+            pChimes(lev.m); //play chimes if defined
             callEachFrame(1000, (r) => {
                 lev.node.position.set(0, inter(r, 40, 0, so), 0);
             });

@@ -24,6 +24,7 @@ const mkL = (l, t1, t2, t3, t4) => {
 
 export const levF = {
     start: () => ({
+        m: { t: 0, o: [2, 2, 3], ge: 4 },
         irx: inter(getFIL() / 13, 0, .7),
         iry: -getFIL() / 6 * 3.14,
         obj: [
@@ -79,6 +80,7 @@ export const levF = {
         ]
     }),*/
     0: () => ({ //needle teacher
+        m: { t: 1, o: [3, 4, 4, 5], ge: .5 },
         obj: [
             { n: 's1', g: objF.plat(5), p: { y: 5, ry: 1.5 } },
             cat(0, { parent: 's1', y: .6, ry: -1 }),
@@ -95,7 +97,9 @@ export const levF = {
     1: () => ({ //wheel teacher
         irx: .4,
         iry: .4,
+        m: { t: 2, o: [4, 4, 5], d: [4, 6] },
         obj: [
+
             {
                 n: 'w1', g: objF.wheel(), p: { x: 3, y: 1 },
                 r: [
@@ -130,7 +134,7 @@ export const levF = {
 
     }),
     2: () => ({ //easy wheel level
-        lev: 2,
+        m: { t: 2, o: [2, 3, 3, 3], },
         obj: [
             { n: 'w1', g: objF.wheel(), p: { y: 2, x: -1 } },
             { n: 'b1', g: objF.basket(), p: { parent: "w1", y: 2, ry: 2.5, add: { passDown: true } } },
@@ -153,6 +157,7 @@ export const levF = {
         ], irx: .52, iry: 3.16
     }),
     3: () => ({  //press teacher
+        m: { t: 4, o: [2, 4], d: [10, 20], gs: 1, ge: 2 },
         obj: [
             { n: 's1', g: objF.plat(11), p: { y: 11.5, x: -1 } },
             cat(3, { parent: 's1', y: 1, ry: 1 }),
@@ -183,6 +188,7 @@ export const levF = {
         ]
     }),
     4: () => ({ //hinge teacher
+        m: { t: 2, o: [6, 4, 5], gs: .2, ge: .8 },
         irx: .3,
         iry: -.7,
         obj: [
@@ -210,6 +216,8 @@ export const levF = {
         ]
     }),
     5: () => ({ //int hard high presses
+        m: { t: 3, o: [2, 3] },
+
         ixr: 0,
         iyr: 0.26,
         obj: [
@@ -245,6 +253,7 @@ export const levF = {
         ]
     }),
     6: () => ({ //hard combo lock
+        m: { t: 1, o: [2, 3, 3, 3], d: [20, 30, 40], ge: 3 },
         obj: [
             { n: 's1', g: objF.plat(16), p: { y: 5.5 } },
             cat(6, { parent: 's1', y: 1, x: 2, ry: -1 }),
@@ -302,6 +311,7 @@ export const levF = {
     7: () => ({ //cat in a box - low - hard
         irx: 0,
         iry: 0,
+        m: { t: 0, o: [2, 3, 4] },
         obj: [
 
             { n: 'p1', g: objF.plat(10), p: { y: 8, z: 0 } },
@@ -366,6 +376,7 @@ export const levF = {
     8: () => ({ //hard guarded everything
         irx: 0,
         iry: 0,
+        m: { t: 1, o: [1, 2, 2, 3] },
         obj: [
 
             { n: 'b1', g: objF.basket(), p: { y: 14.5, z: -5, ry: 3.14, add: { passDown: true } } },
@@ -420,6 +431,8 @@ export const levF = {
 
     }),
     9: () => ({ //unhinged
+        m: { t: 0, o: [2, 4, 4, 5], d: [5], gs: .3, ge: .5 },
+
         irx: .6,
         iry: .6,
         obj: [
@@ -478,6 +491,7 @@ export const levF = {
 
     }),
     10: () => ({ //combo lock 2
+        m: { t: 1, o: [1, 2, 2, 2, 3] },
         irx: 0,
         iry: 1,
         obj: [
@@ -567,6 +581,8 @@ export const levF = {
 
     }),
     11: () => ({ //Arm thing
+        m: { t: 3, o: [3, 3, 4] },
+
         irx: .8,
         iry: 1.3,
         obj: [
@@ -661,6 +677,8 @@ export const levF = {
 
     }),
     12: () => ({ //tower
+        m: { t: 0, o: [1, 2, 3, 3, 5], ge: 2 },
+
         irx: 1,
         iry: .2,
         obj: [

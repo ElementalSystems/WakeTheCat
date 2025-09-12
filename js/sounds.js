@@ -5,13 +5,12 @@ const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 const mVolume = audioCtx.createGain(); //music master volume
 mVolume.connect(audioCtx.destination);
-export const setMVol = (v) => mVolume.gain.setValueAtTime(v, audioCtx.currentTime);
-setMVol(.05);
+mVolume.gain.setValueAtTime(.1, audioCtx.currentTime);
 
 const fxVolume = audioCtx.createGain(); //fx master volume
 fxVolume.connect(audioCtx.destination);
-export const setFXVol = (v) => fxVolume.gain.setValueAtTime(v, audioCtx.currentTime);
-setFXVol(.6);
+fxVolume.gain.setValueAtTime(.6, audioCtx.currentTime);
+
 
 
 
@@ -235,10 +234,18 @@ function makeTone(freq, destination, startTime, duration) {
 
 var _c = null;
 
+var _k = [
+    [0, 2, 4, 7, 9], //0:Major
+    [0, 3, 5, 7, 10],//1:minor
+    [0, 2, 5, 7, 10],//2:egyptian
+    [0, 1, 5, 7, 10],//3:In Sen
+    [0, 2, 5, 7, 9], //4: Yo
+]
+
 function _chime() { //time to strike a random chime
     if (!_c) return;
-    playGong(randA(_c.t), randA(_c.o), randA(_c.d), ranR(_c.vs, _c.ve));
-    setTimeout(_chime, ranR(_c.gs, _c.ge) * 1000);
+    playGong(randA(_k[_c.t]), randA(_c.o), randA(_c.d || [10, 20, 25]), ranR(_c.vs || .1, _c.ve || .5));
+    setTimeout(_chime, ranR(_c.gs || .5, _c.ge || 1) * 1000);
 }
 
 export function pChimes(c = null) //start the chimes with a set up or null to silence  
