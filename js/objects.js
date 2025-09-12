@@ -1,5 +1,5 @@
 import {
-    Shape, Path, ExtrudeGeometry, Group, Mesh, Object3D,
+    Group, Mesh, Object3D,
     MeshStandardMaterial, DoubleSide, FrontSide, CylinderGeometry,
     TorusGeometry, BoxGeometry, CapsuleGeometry, SphereGeometry,
     ConeGeometry, PlaneGeometry, DirectionalLight, AmbientLight
@@ -19,25 +19,6 @@ function getSubstates(i, sts) {
     if (!sts.some(s => s.sub && s.sub[i])) return null; //if the bit has no substate forget it
     return sts.map(s => s.sub && s.sub[i] ? s.sub[i] : {}) //otherwise force full substate for all states 
         .map(cStates);
-}
-
-function ringMesh(r, ir, h) {
-    const shape = new Shape();
-    shape.absarc(0, 0, r, 0, Math.PI * 2, false);
-
-    const holePath = new Path();
-    holePath.absarc(0, 0, ir, 0, Math.PI * 2, true);
-    shape.holes.push(holePath);
-
-    return new ExtrudeGeometry(shape, {
-        depth: h,        // extrusion depth
-        steps: 3,                // low steps -> vertical sides
-        curveSegments: 32,
-        bevelEnabled: true,
-        bevelThickness: h / 3,   // how “tall” the bevel is
-        bevelSize: h / 3,        // how far inward the bevel goes
-        bevelSegments: 3
-    });
 }
 
 export const cat = (i, p, r, n = false) => {
@@ -149,9 +130,10 @@ export const objF = {
         ], [], { passDown: true }
     ),
     gRing: (h = 5) => makeCO(
-        msm("#FF0", null, .1, textures.pitted(), .5, .9),
+        msm("#AA0", null, .1, textures.pitted(10, 20), 1, .8),
         [
-            ringMesh(.6, .4, .3),
+            //ringMesh(.6, .4, .3).translate(0, 0, .5),
+            new TorusGeometry(.45, .25, 12, 20).translate(0, 0, .1),
             new BoxGeometry(.3, h, .3).translate(0, -h / 2 - .3, .15),
         ], [], { passDown: true }
     ),
@@ -211,10 +193,10 @@ export const objF = {
         )
     },
     wheel: () => makeCO(
-        msm("#AA0", null, .1, textures.pitted(), .5),
+        msm("#AA0", null, .1, textures.pitted(10, 20), 1, .8),
         [
-            ringMesh(6, 5, 1).rotateX(3.14 / 2).translate(0, .5, 0),
-            ringMesh(1.5, 1, 1).rotateX(3.14 / 2).translate(0, .5, 0),
+            new TorusGeometry(5.5, .8, 20, 40).rotateX(3.14 / 2),
+            new TorusGeometry(1.5, .5, 10, 20).rotateX(3.14 / 2),
             new CapsuleGeometry(.3, 7, 5, 10, 3).rotateX(3.14 / 2).translate(0, 0, 5),
             new CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(3.14 * 2 / 3),
             new CapsuleGeometry(.3, 4.5, 5, 10, 3).translate(0, 3.5, 0).rotateX(3.14 / 2).rotateY(-3.14 * 2 / 3),
