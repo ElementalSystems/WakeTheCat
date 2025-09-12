@@ -1,5 +1,3 @@
-import * as THREE from 'three';
-import { textures } from './textures.js';
 import { objF, cat } from './objects.js';
 import { inter, getFIL } from './util.js'
 

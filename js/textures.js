@@ -35,8 +35,7 @@ function makeCanvasTexture(drawFunc, bg = 0, repeat = 1, mirror = true) {
     drawFunc(ctx);
 
     var texture = new THREE.CanvasTexture(canvas);
-    texture.wrapS = mirror ? THREE.MirroredRepeatWrapping : THREE.RepeatWrapping;
-    texture.wrapT = mirror ? THREE.MirroredRepeatWrapping : THREE.RepeatWrapping;
+    texture.wrapS = texture.wrapT = mirror ? THREE.MirroredRepeatWrapping : THREE.RepeatWrapping;
     texture.repeat.set(repeat, repeat);
     return texture;
 }
@@ -128,14 +127,14 @@ export const textures = {
     }, "#FFF", 5, false),
     text: (title, line1 = '', line2 = '', line3 = '', bg = "#000", fg = "#FFF") => {
         return makeCanvasTexture((ctx) => {
-            ctx.font = "90px sans-serif";     // Font size and family
+            ctx.font = '90px "Comic Sans MS", sans-serif';     // Font size and family
             ctx.fillStyle = fg;     // Text color
             ctx.textAlign = "center";   // horizontal alignment
             ctx.textBaseline = "middle"; // vertical alignment
 
             // Draw the text
             ctx.fillText(title, 256, 100);
-            ctx.font = "80px sans-serif";     // Font size and family
+            ctx.font = '80px "Comic Sans MS",sans-serif';     // Font size and family
             ctx.fillText(line1, 256, 220);
             ctx.fillText(line2, 256, 320);
             ctx.fillText(line3, 256, 420);
