@@ -1,5 +1,6 @@
 import * as THREE from 'three';
-import { textures } from './textures.js';
+import { wObj } from './objects.js';
+
 import { initMouse } from './mouse.js';
 import { levF } from './levels.js'
 import { callEachFrame, siso, inter, si, so, frame, setLC } from './util.js';
@@ -126,38 +127,7 @@ export function makeWorld() {
     camera.lookAt(0, 3, 0); // Look at the origin
 
 
-    // The world plane
-    const planeMaterial = new THREE.MeshStandardMaterial({
-        map: textures.pitted(3, 100),
-        bumpMap: textures.pitted(5, 44),
-        bumpScale: 1,
-        color: "#262",
-        roughness: .2,
-
-    });
-    const plane = new THREE.Mesh(new THREE.PlaneGeometry(100, 100, 10, 10), planeMaterial);
-    plane.receiveShadow = true; // plane will receive shadows
-    plane.rotation.x = -Math.PI / 2; // make it horizontal
-    scene.add(plane);
-
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft global light
-    scene.add(ambientLight);
-
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-    directionalLight.position.set(25, 35, 5);
-    directionalLight.castShadow = true; // enable shadows
-    directionalLight.shadow.mapSize.width = 2048;
-    directionalLight.shadow.mapSize.height = 2048;
-    directionalLight.shadow.camera.near = 1;
-    directionalLight.shadow.camera.far = 100;
-    directionalLight.shadow.camera.left = -100;
-    directionalLight.shadow.camera.right = 100;
-    directionalLight.shadow.camera.top = 100;
-    directionalLight.shadow.camera.bottom = -100;
-    scene.add(directionalLight);
-
-
+    wObj(scene);
 
 
     // Render Loop

@@ -93,7 +93,7 @@ function setMaterialIndex(geo, index) {
 
 
 //local Storage
-var _complete = JSON.parse(localStorage.getItem("js13k2025-WakeTheCat")) || (new Array(13).fill(0));
+var _complete = JSON.parse(localStorage.getItem("js13k2025-WakeTheCat")) || (new Array(15).fill(0));
 
 export const setLC = (lev, set = 1) => {
     _complete[lev] = set

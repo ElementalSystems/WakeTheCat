@@ -27,6 +27,8 @@ export function initVR(renderer, scene, camera, clickFunction) {
     const boxMaterial = new THREE.MeshStandardMaterial({
         color: "#FFF",
         map: textures.arrow(),
+        bumpMap: textures.arrow(),
+        bumpScale: 3,
         transparent: true,
         opacity: .5
     });
@@ -37,7 +39,7 @@ export function initVR(renderer, scene, camera, clickFunction) {
         { n: "_w", x: 0, y: -1, r: 0 },
         { n: "_s", x: 0, y: 1, r: 2 },
     ].forEach(b => {
-        const box = new THREE.Mesh(new THREE.BoxGeometry(.1, .01, .1), boxMaterial);
+        const box = new THREE.Mesh(new THREE.BoxGeometry(.1, .05, .1), boxMaterial);
         box.name = b.n;
         box.position.set(b.x * .125, 0, b.y * .125);
         box.rotation.set(0, b.r * 3.14 / 2, 0);
