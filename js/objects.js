@@ -212,11 +212,11 @@ export const objF = {
             wrapState: true,
         }
     ),
-    sign: (t, l1, l2, l3) => {
+    sign: (t, l1, l2, l3, l4) => {
         return makeCO(
             [
                 msm("#A84", textures.wood(2), 1),
-                msm(null, textures.text(t, l1, l2, l3, "#000", "#CC8"), .8, textures.text(t, l1, l2, l3, "#000", "#FFF"), 4)
+                msm(null, textures.text(t, l1, l2, l3, l4, "#000", "#CC8"), .8, textures.text(t, l1, l2, l3, "#000", "#FFF"), 4)
             ],
             [
                 new BoxGeometry(6, 6, .1).translate(0, 8, 0),

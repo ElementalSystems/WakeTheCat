@@ -125,19 +125,21 @@ export const textures = {
         ctx.lineR(-100, 156, 356, 612, "#0008", 100, 4);
         ctx.lineR(156, -100, 612, 356, "#0008", 100, 4);
     }, "#FFF", 5, false),
-    text: (title, line1 = '', line2 = '', line3 = '', bg = "#000", fg = "#FFF") => {
+    text: (title, line1 = '', line2 = '', line3 = '', line4 = '', bg = "#000", fg = "#FFF") => {
         return makeCanvasTexture((ctx) => {
-            ctx.font = '90px "Comic Sans MS", sans-serif';     // Font size and family
+            var fm = line4 ? .7 : 1;
+            ctx.font = (90 * fm) + 'px "Comic Sans MS", sans-serif';     // Font size and family
             ctx.fillStyle = fg;     // Text color
             ctx.textAlign = "center";   // horizontal alignment
             ctx.textBaseline = "middle"; // vertical alignment
 
             // Draw the text
             ctx.fillText(title, 256, 100);
-            ctx.font = '80px "Comic Sans MS",sans-serif';     // Font size and family
-            ctx.fillText(line1, 256, 220);
-            ctx.fillText(line2, 256, 320);
-            ctx.fillText(line3, 256, 420);
+            ctx.font = (70 * fm) + 'px "Comic Sans MS",sans-serif';     // Font size and family
+            ctx.fillText(line1, 256, 230 * fm);
+            ctx.fillText(line2, 256, 330 * fm);
+            ctx.fillText(line3, 256, 430 * fm);
+            ctx.fillText(line4, 256, 530 * fm);
 
         }, bg)
     }

@@ -21,6 +21,17 @@ const mkL = (l, t1, t2, t3, t4) => {
 }
 
 export const levF = {
+    100: () => ({
+        irx: .5,
+        iry: .3,
+        obj: [
+            cat(12,
+                { y: 5, s: 2, add: { passDown: false } },
+                [{ st: 1, con: [], res: 201 }], true),
+            { n: 'p', g: objF.plat(10), p: { s: 2, parent: 'cat12', x: 0, z: 0, y: -2.2 } },
+            { n: 's', g: objF.sign("WAKE THE CAT", "", "", "elementalsystems", "for js13kgames"), p: { parent: 'cat12', s: 1.5, y: -3, z: -4 } },
+        ]
+    }),
     101: () => ({
         m: { t: 0, o: [2, 2, 3], ge: 4 },
         irx: inter(getFIL() / 13, 0, .7),
@@ -29,9 +40,9 @@ export const levF = {
             ...mkL(0, "1 Snowy", "loves her", "knitting", "needles"),
             ...mkL(1, "2 Tigress", "a free", "wheeling", "queen"),
             ...mkL(2, "3 Minx", "", "innocent and", "so fluffy"),
-            ...mkL(3, "4 Spot", "feels safe ", "at", "altitude"),
+            ...mkL(3, "4 Spot", "likes", "to be", "high"),
             ...mkL(4, "5 Inked", "a sign ", "of our", "times"),
-            ...mkL(5, "6 Splat", "feels safe ", "when he's", "high"),
+            ...mkL(5, "6 Splat", "feels safe ", "at", "altitude"),
             ...mkL(6, "7 Gambit", "", "built", "a lock"),
             ...mkL(7, "8 Ginger", "", "is safe in", "a box"),
             ...mkL(8, "9 Jack", "the old man", "stays under", "cover"),

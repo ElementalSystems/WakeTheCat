@@ -181,7 +181,7 @@ export function makeWorld() {
         } else levIn();
     }
 
-    startLevel(makeLevel(101));
+    startLevel(makeLevel(100));
 
 
     const movePiece = (p) => {
@@ -223,7 +223,7 @@ export function makeWorld() {
                             startLevel(makeLevel(101));
                         });
                     }
-                    if ((out >= 100) && (out < 200))
+                    if (out >= 100)
                         startLevel(makeLevel(out - 100));
                     p.st = ns; //sets the new state
                     if (p.node.wrapState && (ns == sts.length - 1)) {// the last one needs to wrap
