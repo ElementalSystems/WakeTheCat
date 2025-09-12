@@ -181,8 +181,7 @@ export function makeWorld() {
         } else levIn();
     }
 
-    startLevel(makeLevel(12));
-    //startLevel(makeLevel(101));
+    startLevel(makeLevel(101));
 
 
     const movePiece = (p) => {
