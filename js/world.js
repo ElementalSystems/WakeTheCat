@@ -218,12 +218,12 @@ export function makeWorld() {
                     lMoving = false;
                     if (out == 10) {  //we won!
                         if (level.ref >= 0) setLC(level.ref);
-                        sFX.yowl(3, 3);
-                        moveP(level.pieces.cat, 2000, 1, 2, 0, 1, so, () => {
+                        sFX.yowl(2, 2);
+                        moveP(level.pieces.cat, 1000, 1, 2, 0, 1, so, () => {
                             startLevel(makeLevel(101));
                         });
                     }
-                    if (out >= 100)
+                    if ((out >= 100) && (out <= 300))
                         startLevel(makeLevel(out - 100));
                     p.st = ns; //sets the new state
                     if (p.node.wrapState && (ns == sts.length - 1)) {// the last one needs to wrap
