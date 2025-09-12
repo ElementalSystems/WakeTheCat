@@ -42,29 +42,29 @@ function makeCanvasTexture(drawFunc, bg = 0, repeat = 1, mirror = true) {
 }
 
 export const textures = {
-    squares: () => makeCanvasTexture((ctx) => {
-        ctx.fillStyle = '#ff0000';
-        ctx.fillRect(0, 0, 256, 256);
-        ctx.fillStyle = '#AA0000';
-        ctx.fillRect(256, 0, 256, 256);
-        ctx.fillStyle = '#880000';
-        ctx.fillRect(0, 256, 256, 256);
-        ctx.fillStyle = '#330000';
-        ctx.fillRect(256, 256, 256, 256);
-    }, 0, 100),
+    /* squares: () => makeCanvasTexture((ctx) => {
+         ctx.fillStyle = '#ff0000';
+         ctx.fillRect(0, 0, 256, 256);
+         ctx.fillStyle = '#AA0000';
+         ctx.fillRect(256, 0, 256, 256);
+         ctx.fillStyle = '#880000';
+         ctx.fillRect(0, 256, 256, 256);
+         ctx.fillStyle = '#330000';
+         ctx.fillRect(256, 256, 256, 256);
+     }, 0, 100),*/
     lines: (rep = 5) => makeCanvasTexture((ctx) => {
         ctx.lineR(0, 256, 512, 256, "#0004", 100, 8)
     }, "#FFF", rep),
     dimple: (rep = 5) => makeCanvasTexture((ctx) => {
         ctx.ellR(256, 256, 128, 128, "#0004", 8)
     }, "#FFF", rep),
-    weave: (rep = 5) => makeCanvasTexture((ctx) => {
-        ctx.lineR(0, 128, 512, 128, "#FFFFFF05", 200, 5);
-        ctx.lineR(128, 0, 128, 512, "#FFFFFF05", 200, 5);
-        ctx.lineR(0, 256 + 128, 512, 256 + 128, "#FFFFFF05", 200, 5);
-        ctx.lineR(256 + 128, 0, 256 + 128, 512, "#FFFFFF05", 200, 5);
-
-    }, "#000", rep, true),
+    /*  weave: (rep = 5) => makeCanvasTexture((ctx) => {
+          ctx.lineR(0, 128, 512, 128, "#FFFFFF05", 200, 5);
+          ctx.lineR(128, 0, 128, 512, "#FFFFFF05", 200, 5);
+          ctx.lineR(0, 256 + 128, 512, 256 + 128, "#FFFFFF05", 200, 5);
+          ctx.lineR(256 + 128, 0, 256 + 128, 512, "#FFFFFF05", 200, 5);
+  
+      }, "#000", rep, true),*/
 
     frame: () => makeCanvasTexture((ctx) => {
         ctx.fillStyle = '#000088';
