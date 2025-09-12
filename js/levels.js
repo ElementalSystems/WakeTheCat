@@ -647,7 +647,7 @@ export const levF = {
         iry: .2,
         obj: [
             {
-                n: 'l1', g: objF.press(), p: { is: 0 },
+                n: 'l1', g: objF.press(), p: { is: 2 },
                 r: [
                     { st: 0, con: [{ o: 'l2', st: 2 }, { o: 'w1', st: 0 }], res: .08 },
                     { st: 0, con: [{ o: 'l2', st: 2 }, { o: 'h1', st: 0 }], res: .15 },
@@ -662,7 +662,7 @@ export const levF = {
             },
 
             {
-                n: 'l2', g: objF.press(), p: { parent: 'l1', is: 2, y: 5, is: 0 },
+                n: 'l2', g: objF.press(), p: { parent: 'l1', is: 2, y: 5, is: 2 },
                 r: [
                     { st: 0, con: [{ o: 'l1', st: 2 }, { o: 'w1', st: 0 }], res: .08 },
                     { st: 0, con: [{ o: 'l1', st: 2 }, { o: 'h1', st: 0 }], res: .15 },
@@ -703,7 +703,7 @@ export const levF = {
                 n: 'l3', g: objF.press(), p: { y: 2, x: 4, z: 8, rz: 3.14 / 2, is: 2 },
                 r: [
                     { st: 2, con: [{ o: 'n1', st: 0 }, { o: 'l4', st: 0 },], res: .8 },
-                    { st: 0, con: [{ o: 'n1', st: 1 }, { o: 'h1', st: 0 }], res: .1 },
+                    { st: 0, con: [{ o: 'n1', st: 1 }], res: .1 },
 
                 ],
             },
@@ -736,8 +736,8 @@ export const levF = {
 
                 ]
             },
-            { n: 'gr3', g: objF.gRing(10), p: { y: 10.5, z: 5, x: -1, ry: 0 }, },
-            { n: 'gr4', g: objF.gRing(5), p: { y: 16, z: 5, x: -1, ry: 0 }, },
+            { n: 'gr3', g: objF.gRing(10), p: { y: 10.5, z: 5, x: -1, }, },
+            { n: 'gr4', g: objF.gRing(8), p: { y: 10.5, z: 5, x: -1, rx: 3.14 }, },
 
         ]
 
