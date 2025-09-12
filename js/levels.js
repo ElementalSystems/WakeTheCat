@@ -43,42 +43,6 @@ export const levF = {
             ...mkL(12, "13 Midnight", "needs to", "be brought", "down"),
         ]
     }),
-    /*
-    test: () => ({
-        music: { t: [0, 2, 4, 7, 9], o: [2, 3, 3, 3, 4], d: [10, 20, 25], vs: .1, ve: .5, gs: .2, ge: 1 },
-        obj: [
-            {
-                n: 'n1', g: objF.needle(), p: { x: 10, y: 16 },
-                r: [{ st: 1, con: [{ o: 'n2', st: 0 }], res: .3 }]
-            },
-            {
-                n: 'n2', g: objF.needle(), p: { x: 10, y: 8, rx: 3.14 / 2 },
-                r: [{ st: 0, con: [{ o: 'n1', st: 1 }], res: .48 },]
-            },
-            { n: 'n4', g: objF.needle(), p: { y: 5 } },
-            { n: 'b1', g: objF.basket(), p: { parent: 'n4', y: 5, add: { passDown: true } } },
-            { n: 'w1', g: objF.wheel(), p: { x: -13, y: 1, z: 0 } },
-            { n: 'p1', g: objF.press(), p: { parent: 'w1', x: 0, y: 3 } },
-            { n: 'p2', g: objF.press(), p: { parent: 'p1', y: 5, rx: 3.14 / 2 } },
-            { n: 'p3', g: objF.press(), p: { parent: 'p2', y: 5, rz: -3.14 / 2 } },
-            { n: 'w2', g: objF.wheel(), p: { x: 13, y: 10, z: 10 } },
-            { n: 'b2', g: objF.basket(), p: { parent: 'w2', z: 9, y: 1, add: { passDown: true } } },
-            { n: 's1', g: objF.sign("✔Snowy✔", "Trusting little", "kitten", "easy to scare"), p: { x: 0, z: -7, ry: 3.14, s: .6 } },
-            { n: 's2', g: objF.sign("Midnight", "", "Skittish", "sleeps safe"), p: { parent: 'w2', x: 0, z: -6, ry: 3.14 } },
-            cat(5, { z: 15, y: 1 }),
-            { n: 'cat2', g: objF.cat(), p: { parent: 'b2', y: 1 } },
-            { n: 'cat3', g: objF.cat(textures.blochy("#000", null, null, 3), "#FFF"), p: { x: -5, z: 15, y: 1, is: 1 } },
-            { n: 'cat4', g: objF.cat(textures.tabby("#0004", "#FFF"), "#A80"), p: { x: 5, z: 15, y: 1, is: 2 } },
-            { n: 's1', g: objF.plat(), p: { x: 5, z: 10, y: 15 } },
-            { n: 'cat5', g: objF.cat(textures.tabby("#0004", "#FFF"), "#CCC"), p: { parent: 's1', y: 1 } },
-            { n: 'gr1', g: objF.gRing(4), p: { parent: 'w1', x: -6, y: 4, add: { passDown: true } } },
-            { n: 'n4', g: objF.needle(), p: { parent: 'gr1', z: 4.5, y: 0, rx: 3.14 / 2 } },
-            { n: 'h4', g: objF.hinge(), p: { z: -20, y: 3, x: -5 } },
-            { n: 'h5', g: objF.hinge(), p: { parent: 'h4', y: 4, ry: 3.14 / 2, x: 1.2, z: 1.2 } },
-            { n: 's3', g: objF.sign("HELLO!"), p: { parent: 'h5', y: 1, x: 1, s: .5 } },
-
-        ]
-    }),*/
     0: () => ({ //needle teacher
         m: { t: 1, o: [3, 4, 4, 5], ge: .5 },
         obj: [
@@ -683,24 +647,31 @@ export const levF = {
         iry: .2,
         obj: [
             {
-                n: 'l1', g: objF.press(), p: { is: 2 },
+                n: 'l1', g: objF.press(), p: { is: 0 },
                 r: [
                     { st: 0, con: [{ o: 'l2', st: 2 }, { o: 'w1', st: 0 }], res: .08 },
                     { st: 0, con: [{ o: 'l2', st: 2 }, { o: 'h1', st: 0 }], res: .15 },
                     { st: 0, con: [{ o: 'l2', st: [0, 1] }, { o: 'h1', st: 1 }], res: .1 },
                     { st: 0, con: [{ o: 'l2', st: [0, 1] }, { o: 'w1', st: [1, 3] }], res: .5 },
 
+                    { st: 1, con: [{ o: 'l2', st: 2 }, { o: 'h1', st: 0 }], res: .15 },
+                    { st: 1, con: [{ o: 'l2', st: 2 }, { o: 'w1', st: [0, 2] }], res: .1 },
+                    { st: 1, con: [{ o: 'l2', st: 0 }, { o: 'w1', st: [1, 3] }], res: .75 }
 
                 ],
             },
 
             {
-                n: 'l2', g: objF.press(), p: { parent: 'l1', is: 2, y: 5 },
+                n: 'l2', g: objF.press(), p: { parent: 'l1', is: 2, y: 5, is: 0 },
                 r: [
                     { st: 0, con: [{ o: 'l1', st: 2 }, { o: 'w1', st: 0 }], res: .08 },
                     { st: 0, con: [{ o: 'l1', st: 2 }, { o: 'h1', st: 0 }], res: .15 },
                     { st: 0, con: [{ o: 'l1', st: [0, 1] }, { o: 'h1', st: 1 }], res: .1 },
                     { st: 0, con: [{ o: 'l1', st: [0, 1] }, { o: 'w1', st: [1, 3] }], res: .5 },
+                    { st: 1, con: [{ o: 'l1', st: 2 }, { o: 'h1', st: 0 }], res: .15 },
+                    { st: 1, con: [{ o: 'l1', st: 2 }, { o: 'w1', st: [0, 2] }], res: .1 },
+                    { st: 1, con: [{ o: 'l1', st: 0 }, { o: 'w1', st: [1, 3] }], res: .75 }
+
 
                 ],
             },
@@ -759,7 +730,7 @@ export const levF = {
                 ]
             },
             {
-                n: 'n2', g: objF.needle(), p: { y: 14, z: 12, x: -7, is: 1 },
+                n: 'n2', g: objF.needle(), p: { y: 14, z: 12, x: -7, is: 0 },
                 r: [
                     { st: 0, con: [{ o: 'n1', st: 0 }, { o: 'l3', st: 2 }], res: .6 },
 
