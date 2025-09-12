@@ -23,7 +23,7 @@ const mkL = (l, t1, t2, t3, t4) => {
 }
 
 export const levF = {
-    start: () => ({
+    101: () => ({
         m: { t: 0, o: [2, 2, 3], ge: 4 },
         irx: inter(getFIL() / 13, 0, .7),
         iry: -getFIL() / 6 * 3.14,

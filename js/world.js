@@ -181,8 +181,8 @@ export function makeWorld() {
         } else levIn();
     }
 
-    startLevel(makeLevel(2));
-    //startLevel(makeLevel('start'));
+    startLevel(makeLevel(12));
+    //startLevel(makeLevel(101));
 
 
     const movePiece = (p) => {
@@ -221,7 +221,7 @@ export function makeWorld() {
                         if (level.ref >= 0) setLC(level.ref);
                         sFX.yowl(3, 3);
                         moveP(level.pieces.cat, 2000, 1, 2, 0, 1, so, () => {
-                            startLevel(makeLevel('start'));
+                            startLevel(makeLevel(101));
                         });
                     }
                     if ((out >= 100) && (out < 200))
